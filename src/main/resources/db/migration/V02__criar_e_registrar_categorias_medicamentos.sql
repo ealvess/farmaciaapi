@@ -1,0 +1,57 @@
+CREATE TABLE categoria(
+	codigo BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
+	nome VARCHAR(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO categoria (nome) values ('Anestésicos Gerais');
+INSERT INTO categoria (nome) values ('Anestésicos Locais');
+INSERT INTO categoria (nome) values ('Anticonvulsionantes');
+INSERT INTO categoria (nome) values ('Analgésicos e antipiréticos');
+INSERT INTO categoria (nome) values ('Hipnoanalgésicos');
+INSERT INTO categoria (nome) values ('Sedativos-hipnóticos');
+INSERT INTO categoria (nome) values ('Neurolépticos');
+INSERT INTO categoria (nome) values ('Cardiotônicos');
+INSERT INTO categoria (nome) values ('Antiarrítmicos');
+INSERT INTO categoria (nome) values ('Antiaginosos');
+INSERT INTO categoria (nome) values ('Hipertensores e Simpatomiméticos');
+INSERT INTO categoria (nome) values ('Anti-hipertensivos');
+INSERT INTO categoria (nome) values ('Broncodilatadores');
+INSERT INTO categoria (nome) values ('Surfactantes');
+INSERT INTO categoria (nome) values ('Laxativos');
+INSERT INTO categoria (nome) values ('Antiespasmódicos e Anticolinérgicos');
+INSERT INTO categoria (nome) values ('Antieméticos');
+INSERT INTO categoria (nome) values ('Antifiséticos');
+INSERT INTO categoria (nome) values ('Inibidores da Secreção Gástrica');
+INSERT INTO categoria (nome) values ('Vitaminas');
+INSERT INTO categoria (nome) values ('Repostiores Hidroeletrolíticos');
+INSERT INTO categoria (nome) values ('Diuréticos');
+INSERT INTO categoria (nome) values ('Hormônios Sexuais');
+INSERT INTO categoria (nome) values ('Estimulantes Uterinos');
+INSERT INTO categoria (nome) values ('Diálise');
+INSERT INTO categoria (nome) values ('Antianêmicos');
+INSERT INTO categoria (nome) values ('Anticoagulantes');
+INSERT INTO categoria (nome) values ('Antihemorrágicos');
+INSERT INTO categoria (nome) values ('Antinflamatórios não esteroidas');
+INSERT INTO categoria (nome) values ('Bloqueadores neuro-musculares');
+INSERT INTO categoria (nome) values ('Colinérgicos');
+INSERT INTO categoria (nome) values ('Rino-Oftalmicos');
+INSERT INTO categoria (nome) values ('Dermatológicos');
+INSERT INTO categoria (nome) values ('Corticosteróides e Anti-Histamínicos');
+INSERT INTO categoria (nome) values ('Antidiabéticos');
+INSERT INTO categoria (nome) values ('Antídotos');
+INSERT INTO categoria (nome) values ('Agentes Imunizantes e Prostaglandinas');
+INSERT INTO categoria (nome) values ('Penicilinas');
+INSERT INTO categoria (nome) values ('Cefalosporibas');
+INSERT INTO categoria (nome) values ('Aminoglicosídeos');
+INSERT INTO categoria (nome) values ('Carbapenêmicos');
+INSERT INTO categoria (nome) values ('Glicopept´deos');
+INSERT INTO categoria (nome) values ('Imidazóis');
+INSERT INTO categoria (nome) values ('Nitrofuranos');
+INSERT INTO categoria (nome) values ('Quinolomas');
+INSERT INTO categoria (nome) values ('Macrolídeos');
+INSERT INTO categoria (nome) values ('Lincosaminas');
+INSERT INTO categoria (nome) values ('Antifúngicos');
+INSERT INTO categoria (nome) values ('Antiparasitários');
+INSERT INTO categoria (nome) values ('Antissépticos, Desinfetantes e Esterelizantes');
+INSERT INTO categoria (nome) values ('Lubrificantes');
+INSERT INTO categoria (nome) values ('Diluentes');
