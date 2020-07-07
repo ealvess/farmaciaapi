@@ -31,7 +31,7 @@ public class CorrelatoResource {
 
 	@Autowired
 	private CorrelatoRepository correlatoRepositrory;
-	
+
 	@Autowired
 	private CorrelatoService correlatoService;
 
@@ -62,10 +62,9 @@ public class CorrelatoResource {
 	public void remover(@PathVariable Long codigo) {
 		correlatoRepositrory.deleteById(codigo);
 	}
-	
+
 	@PutMapping("/{codigo}")
-	public ResponseEntity<Correlato> atualizar(@PathVariable Long codigo,
-			@Validated @RequestBody Correlato correlato) {
+	public ResponseEntity<Correlato> atualizar(@PathVariable Long codigo, @Validated @RequestBody Correlato correlato) {
 		Correlato correlatoSalvo = correlatoService.atualizar(codigo, correlato);
 		return ResponseEntity.ok(correlatoSalvo);
 	}
