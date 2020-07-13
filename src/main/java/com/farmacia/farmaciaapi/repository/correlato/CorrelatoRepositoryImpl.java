@@ -18,7 +18,9 @@ import org.springframework.util.StringUtils;
 
 import com.farmacia.farmaciaapi.model.Correlato;
 import com.farmacia.farmaciaapi.model.Correlato_;
+import com.farmacia.farmaciaapi.model.GrupoCorrelato_;
 import com.farmacia.farmaciaapi.repository.filter.CorrelatoFilter;
+import com.farmacia.farmaciaapi.repository.projection.ResumoCorrelatos;
 
 public class CorrelatoRepositoryImpl implements CorrelatoRepositoryQuery {
 
@@ -37,6 +39,26 @@ public class CorrelatoRepositoryImpl implements CorrelatoRepositoryQuery {
 		criteria.where(predicates);
 
 		TypedQuery<Correlato> query = manager.createQuery(criteria);
+		adiconarRestricoesDePaginacao(query, pageable);
+
+		return new PageImpl<>(query.getResultList(), pageable, total(correlatoFilter));
+	}
+
+	@Override
+	public Page<ResumoCorrelatos> resumo(CorrelatoFilter correlatoFilter, Pageable pageable) {
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaQuery<ResumoCorrelatos> criteria = builder.createQuery(ResumoCorrelatos.class);
+		Root<Correlato> root = criteria.from(Correlato.class);
+
+		criteria.select(builder.construct(ResumoCorrelatos.class, root.get(Correlato_.codigo),
+				root.get(Correlato_.nomeCorrelato), root.get(Correlato_.codigo_grupo).get(GrupoCorrelato_.nome),
+				root.get(Correlato_.apresentacao), root.get(Correlato_.dataEntrada), root.get(Correlato_.dataValidade),
+				root.get(Correlato_.quantidade), root.get(Correlato_.valorUnitario)));
+
+		Predicate[] predicates = criarRestricoes(correlatoFilter, builder, root);
+		criteria.where(predicates);
+
+		TypedQuery<ResumoCorrelatos> query = manager.createQuery(criteria);
 		adiconarRestricoesDePaginacao(query, pageable);
 
 		return new PageImpl<>(query.getResultList(), pageable, total(correlatoFilter));
@@ -64,7 +86,7 @@ public class CorrelatoRepositoryImpl implements CorrelatoRepositoryQuery {
 		return predicates.toArray(new Predicate[predicates.size()]);
 	}
 
-	private void adiconarRestricoesDePaginacao(TypedQuery<Correlato> query, Pageable pageable) {
+	private void adiconarRestricoesDePaginacao(TypedQuery<?> query, Pageable pageable) {
 		int paginaAtual = pageable.getPageNumber();
 		int totalDeRegistorsPorPagina = pageable.getPageSize();
 		int primeiroRegistroPorPagina = paginaAtual * totalDeRegistorsPorPagina;

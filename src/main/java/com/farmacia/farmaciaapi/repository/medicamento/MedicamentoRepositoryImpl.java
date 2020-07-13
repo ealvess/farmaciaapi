@@ -16,9 +16,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
+import com.farmacia.farmaciaapi.model.Categoria_;
 import com.farmacia.farmaciaapi.model.Medicamento;
 import com.farmacia.farmaciaapi.model.Medicamento_;
 import com.farmacia.farmaciaapi.repository.filter.MedicamentoFilter;
+import com.farmacia.farmaciaapi.repository.projection.ResumoMedicamento;
 
 public class MedicamentoRepositoryImpl implements MedicamentoRepositoryQuery {
 
@@ -37,6 +39,28 @@ public class MedicamentoRepositoryImpl implements MedicamentoRepositoryQuery {
 		criteria.where(predicates);
 
 		TypedQuery<Medicamento> query = manager.createQuery(criteria);
+		adiconarRestricoesDePaginacao(query, pageable);
+
+		return new PageImpl<>(query.getResultList(), pageable, total(medicamentoFilter));
+	}
+	
+	@Override
+	public Page<ResumoMedicamento> resumo(MedicamentoFilter medicamentoFilter, Pageable pageable) {
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaQuery<ResumoMedicamento> criteria = builder.createQuery(ResumoMedicamento.class);
+		Root<Medicamento> root = criteria.from(Medicamento.class);
+		
+		criteria.select(builder.construct(ResumoMedicamento.class, 
+				root.get(Medicamento_.codigo), root.get(Medicamento_.nomeMedicamento),
+				root.get(Medicamento_.Categoria).get(Categoria_.nome),
+				root.get(Medicamento_.apresentacaoMedicamento), root.get(Medicamento_.dataEntrada),
+				root.get(Medicamento_.validade), root.get(Medicamento_.quantidade),
+				root.get(Medicamento_.valorUnitario) ));
+		
+		Predicate[] predicates = criarRestricoes(medicamentoFilter, builder, root);
+		criteria.where(predicates);
+
+		TypedQuery<ResumoMedicamento> query = manager.createQuery(criteria);
 		adiconarRestricoesDePaginacao(query, pageable);
 
 		return new PageImpl<>(query.getResultList(), pageable, total(medicamentoFilter));
@@ -64,26 +88,25 @@ public class MedicamentoRepositoryImpl implements MedicamentoRepositoryQuery {
 		return predicates.toArray(new Predicate[predicates.size()]);
 	}
 
-	private void adiconarRestricoesDePaginacao(TypedQuery<Medicamento> query, Pageable pageable) {
+	private void adiconarRestricoesDePaginacao(TypedQuery<?> query, Pageable pageable) {
 		int paginaAtual = pageable.getPageNumber();
 		int totalDeRegistorsPorPagina = pageable.getPageSize();
 		int primeiroRegistroPorPagina = paginaAtual * totalDeRegistorsPorPagina;
-		
+
 		query.setFirstResult(primeiroRegistroPorPagina);
 		query.setMaxResults(totalDeRegistorsPorPagina);
 
 	}
-	
 
 	private Long total(MedicamentoFilter medicamentoFilter) {
 		CriteriaBuilder builder = manager.getCriteriaBuilder();
 		CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
 		Root<Medicamento> root = criteria.from(Medicamento.class);
-		
+
 		Predicate[] predicates = criarRestricoes(medicamentoFilter, builder, root);
 		criteria.where(predicates);
 		criteria.select(builder.count(root));
-		
+
 		return manager.createQuery(criteria).getSingleResult();
 	}
 

@@ -24,6 +24,7 @@ import com.farmacia.farmaciaapi.event.RecursoCriadoEvent;
 import com.farmacia.farmaciaapi.model.Medicamento;
 import com.farmacia.farmaciaapi.repository.MedicamentoRepository;
 import com.farmacia.farmaciaapi.repository.filter.MedicamentoFilter;
+import com.farmacia.farmaciaapi.repository.projection.ResumoMedicamento;
 import com.farmacia.farmaciaapi.service.MedicamentoService;
 
 @RestController
@@ -43,6 +44,12 @@ public class MedicamentoResource {
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_MEDICAMENTO')")
 	public Page<Medicamento> pesquisar(MedicamentoFilter medicamentoFilter, Pageable pageable) {
 		return medicamentoRepository.filtrar(medicamentoFilter, pageable);
+	}
+	
+	@GetMapping(params = "resumo")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_MEDICAMENTO')")
+	public Page<ResumoMedicamento> resumo(MedicamentoFilter medicamentoFilter, Pageable pageable) {
+		return medicamentoRepository.resumo(medicamentoFilter, pageable);
 	}
 
 	@PostMapping

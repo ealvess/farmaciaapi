@@ -24,6 +24,7 @@ import com.farmacia.farmaciaapi.event.RecursoCriadoEvent;
 import com.farmacia.farmaciaapi.model.Correlato;
 import com.farmacia.farmaciaapi.repository.CorrelatoRepository;
 import com.farmacia.farmaciaapi.repository.filter.CorrelatoFilter;
+import com.farmacia.farmaciaapi.repository.projection.ResumoCorrelatos;
 import com.farmacia.farmaciaapi.service.CorrelatoService;
 
 @RestController
@@ -45,6 +46,12 @@ public class CorrelatoResource {
 		return correlatoRepositrory.filtrar(correlatoFilter, pageable);
 	}
 
+	@GetMapping(params = "resumo")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CORRELATO')")
+	public Page<ResumoCorrelatos> resumo(CorrelatoFilter correlatoFilter, Pageable pageable) {
+		return correlatoRepositrory.resumo(correlatoFilter, pageable);
+	}
+
 	@GetMapping("/{codigo}")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CORRELATO')")
 	public ResponseEntity<Correlato> buscarPeloCodigo(@PathVariable Long codigo) {
@@ -53,7 +60,7 @@ public class CorrelatoResource {
 	}
 
 	@PostMapping
-	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CORRELATO')") 
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CORRELATO')")
 	public ResponseEntity<Correlato> criar(@Validated @RequestBody Correlato correlato, HttpServletResponse response) {
 		Correlato correlatoSalvo = correlatoRepositrory.save(correlato);
 		publisher.publishEvent(new RecursoCriadoEvent(this, response, correlatoSalvo.getCodigo()));
