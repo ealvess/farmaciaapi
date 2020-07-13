@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,11 +43,13 @@ public class ItemSaidaCorrelatoResource {
 	private BigDecimal valorTotal;
 
 	@GetMapping
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ITEM_SAIDA_CORRELATO')")
 	public Page<ItemSaidaCorrelato> pesquisar(ItemSaidaCorrelatoFilter itemSaidaCorrelatoFilter, Pageable pageable) {
 		return itemSaidaCorrelatoRespository.filtrar(itemSaidaCorrelatoFilter, pageable);
 	}
 
 	@PostMapping
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_ITEM_SAIDA_CORRELATO')")
 	public ResponseEntity<ItemSaidaCorrelato> criar(@Validated @RequestBody ItemSaidaCorrelato itemSaidaCorrelato,
 			HttpServletResponse response) {
 		ItemSaidaCorrelato itemSaida = itemSaidaCorrelatoRespository.save(itemSaidaCorrelato);
@@ -62,6 +65,7 @@ public class ItemSaidaCorrelatoResource {
 	}
 
 	@GetMapping("/{codigo}")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ITEM_SAIDA_CORRELATO')")
 	public ResponseEntity<ItemSaidaCorrelato> buscarPeloCodigo(@PathVariable Long codigo) {
 		return this.itemSaidaCorrelatoRespository.findById(codigo).map(itemSaida -> ResponseEntity.ok(itemSaida))
 				.orElse(ResponseEntity.notFound().build());

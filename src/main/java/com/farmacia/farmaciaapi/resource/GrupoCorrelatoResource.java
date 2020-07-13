@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,17 +40,20 @@ public class GrupoCorrelatoResource {
 	private ApplicationEventPublisher publisher;
 
 	@GetMapping
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_GRUPO_CORRELATO')")
 	public List<GrupoCorrelato> listar() {
 		return grupoCorrelatoRepository.findAll();
 	}
 
 	@GetMapping("/{codigo}")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_GRUPO_CORRELATO')")
 	public ResponseEntity<GrupoCorrelato> buscarPeloCodigo(@PathVariable Long codigo) {
 		return this.grupoCorrelatoRepository.findById(codigo).map(grupoCorrelato -> ResponseEntity.ok(grupoCorrelato))
 				.orElse(ResponseEntity.notFound().build());
 	}
 
 	@PostMapping
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_GRUPO_CORRELATO')")
 	public ResponseEntity<GrupoCorrelato> criar(@Validated @RequestBody GrupoCorrelato grupo,
 			HttpServletResponse response) {
 		GrupoCorrelato grupoSalvo = grupoCorrelatoRepository.save(grupo);
@@ -62,11 +66,13 @@ public class GrupoCorrelatoResource {
 	
 	@DeleteMapping("/{codigo}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@PreAuthorize("hasAuthority('ROLE_REMOVER_GRUPO_CORRELATO')")
 	public void remover(@PathVariable Long codigo) {
 		grupoCorrelatoRepository.deleteById(codigo);
 	}
 	
 	@PutMapping("/{codigo}")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_GRUPO_CORRELATO')")
 	public ResponseEntity<GrupoCorrelato> atualizar(@PathVariable Long codigo,
 			@Validated @RequestBody GrupoCorrelato grupo) {
 		GrupoCorrelato grupoSalvo = grupoService.atualizar(codigo, grupo);

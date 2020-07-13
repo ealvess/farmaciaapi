@@ -23,40 +23,42 @@ INSERT INTO usuario (codigo, nome, email, senha, tipo) values (1, 'Administrador
 INSERT INTO usuario (codigo, nome, email, senha, tipo) values (2, 'Maria Silva', 'maria@gmail.com', '$2a$10$Zc3w6HyuPOPXamaMhh.PQOXvDnEsadztbfi6/RyZWJDzimE8WQjaq', 'Atendente');
 
 INSERT INTO permissao (codigo, descricao) values (1, 'ROLE_CADASTRAR_CATEGORIA');
+INSERT INTO permissao (codigo, descricao) values (2, 'ROLE_REMOVER_CATEGORIA');
+INSERT INTO permissao (codigo, descricao) values (3, 'ROLE_PESQUISAR_CATEGORIA');
 
-INSERT INTO permissao (codigo, descricao) values (2, 'ROLE_CADASTRAR_CENTRO_DE_CUSTO');
+INSERT INTO permissao (codigo, descricao) values (4, 'ROLE_CADASTRAR_CENTRO_DE_CUSTO');
+INSERT INTO permissao (codigo, descricao) values (5, 'ROLE_REMOVER_CENTRO_DE_CUSTO');
+INSERT INTO permissao (codigo, descricao) values (6, 'ROLE_PESQUISAR_CENTRO_DE_CUSTO');
 
-INSERT INTO permissao (codigo, descricao) values (3, 'ROLE_CADASTRAR_CORRELATO');
-INSERT INTO permissao (codigo, descricao) values (4, 'ROLE_CADASTRAR_REMOVER_CORRELATO');
-INSERT INTO permissao (codigo, descricao) values (5, 'ROLE_CADASTRAR_PESQUISAR_CORRELATO');
+INSERT INTO permissao (codigo, descricao) values (7, 'ROLE_CADASTRAR_CORRELATO');
+INSERT INTO permissao (codigo, descricao) values (8, 'ROLE_REMOVER_CORRELATO');
+INSERT INTO permissao (codigo, descricao) values (9, 'ROLE_PESQUISAR_CORRELATO');
 
-INSERT INTO permissao (codigo, descricao) values (6, 'ROLE_CADASTRAR_DESCARTE');
-INSERT INTO permissao (codigo, descricao) values (7, 'ROLE_CADASTRAR_PESQUISAR_DESCARTE');
+INSERT INTO permissao (codigo, descricao) values (10, 'ROLE_CADASTRAR_FORNECEDOR');
+INSERT INTO permissao (codigo, descricao) values (11, 'ROLE_REMOVER_FORNECEDOR');
+INSERT INTO permissao (codigo, descricao) values (12, 'ROLE_PESQUISAR_FORNECEDOR');
 
-INSERT INTO permissao (codigo, descricao) values (8, 'ROLE_CADASTRAR_FORNECEDOR');
-INSERT INTO permissao (codigo, descricao) values (9, 'ROLE_CADASTRAR_REMOVER_FORNECEDOR');
-INSERT INTO permissao (codigo, descricao) values (10, 'ROLE_CADASTRAR_PESQUISAR_FORNECEDOR');
+INSERT INTO permissao (codigo, descricao) values (13, 'ROLE_CADASTRAR_GRUPO_CORRELATO');
+INSERT INTO permissao (codigo, descricao) values (14, 'ROLE_REMOVER_GRUPO_CORRELATO');
+INSERT INTO permissao (codigo, descricao) values (15, 'ROLE_PESQUISAR_GRUPO_CORRELATO');
 
-INSERT INTO permissao (codigo, descricao) values (11, 'ROLE_CADASTRAR_GRUPO_CORRELATO');
-INSERT INTO permissao (codigo, descricao) values (12, 'ROLE_CADASTRAR_PESQUISAR_GRUPO_CORRELATO');
+INSERT INTO permissao (codigo, descricao) values (16, 'ROLE_CADASTRAR_ITEM_SAIDA_CORRELATO');
+INSERT INTO permissao (codigo, descricao) values (17, 'ROLE_PESQUISAR_ITEM_SAIDA_CORRELATO');
 
-INSERT INTO permissao (codigo, descricao) values (13, 'ROLE_CADASTRAR_ITEM_SAIDA_CORRELATO');
-INSERT INTO permissao (codigo, descricao) values (14, 'ROLE_CADASTRAR_PESQUISAR_ITEM_SAIDA_CORRELATO');
+INSERT INTO permissao (codigo, descricao) values (18,'ROLE_CADASTRAR_ITEM_SAIDA_MEDICAMENTO');
+INSERT INTO permissao (codigo, descricao) values (19,'ROLE_PESQUISAR_ITEM_SAIDA_MEDICAMENTO');
 
-INSERT INTO permissao (codigo, descricao) values (15, 'ROLE_CADASTRAR_ITEM_SAIDA_MEDICAMENTO');
-INSERT INTO permissao (codigo, descricao) values (16, 'ROLE_CADASTRAR_PESQUISAR_ITEM_SAIDA_MEDICAMENTO');
+INSERT INTO permissao (codigo, descricao) values (20, 'ROLE_CADASTRAR_MEDICAMENTO');
+INSERT INTO permissao (codigo, descricao) values (21, 'ROLE_REMOVER_MEDICAMENTO');
+INSERT INTO permissao (codigo, descricao) values (22, 'ROLE_PESQUISAR_MEDICAMENTO');
 
-INSERT INTO permissao (codigo, descricao) values (17, 'ROLE_CADASTRAR_MEDICAMENTO');
-INSERT INTO permissao (codigo, descricao) values (18, 'ROLE_REMOVER_MEDICAMENTO');
-INSERT INTO permissao (codigo, descricao) values (19, 'ROLE_PESQUISAR_MEDICAMENTO');
+INSERT INTO permissao (codigo, descricao) values (23, 'ROLE_CADASTRAR_MEDICO');
+INSERT INTO permissao (codigo, descricao) values (24, 'ROLE_REMOVER_MEDICO');
+INSERT INTO permissao (codigo, descricao) values (25, 'ROLE_PESQUISAR_MEDICO');
 
-INSERT INTO permissao (codigo, descricao) values (20, 'ROLE_CADASTRAR_MEDICO');
-INSERT INTO permissao (codigo, descricao) values (21, 'ROLE_REMOVER_MEDICO');
-INSERT INTO permissao (codigo, descricao) values (22, 'ROLE_PESQUISAR_MEDICO');
-
-INSERT INTO permissao (codigo, descricao) values (23, 'ROLE_CADASTRAR_PACIENTE');
-INSERT INTO permissao (codigo, descricao) values (24, 'ROLE_REMOVER_PACIENTE');
-INSERT INTO permissao (codigo, descricao) values (25, 'ROLE_PESQUISAR_PACIENTE');
+INSERT INTO permissao (codigo, descricao) values (26, 'ROLE_CADASTRAR_PACIENTE');
+INSERT INTO permissao (codigo, descricao) values (27, 'ROLE_REMOVER_PACIENTE');
+INSERT INTO permissao (codigo, descricao) values (28, 'ROLE_PESQUISAR_PACIENTE');
 
 -- admin
 INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 1);
@@ -84,11 +86,20 @@ INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 22);
 INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 23);
 INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 24);
 INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 25);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 26);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 27);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 28);
 
 -- maria
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 3);
 INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 6);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 7);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 13);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 14);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 9);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 12);
 INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 15);
 INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 16);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 17);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 18);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 19);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 22);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 25);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 28);

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,12 +43,14 @@ public class ItemSaidaMedicamentoResource {
 	private BigDecimal valorTotal;
 
 	@GetMapping
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ITEM_SAIDA_MEDICAMENTO')")
 	public Page<ItemSaidaMedicamento> pesquisar(ItemSaidaMedicamentoFilter itemSaidaMedicamentoFilter,
 			Pageable pageable) {
 		return itemSaidaMedicamentoRepository.filtrar(itemSaidaMedicamentoFilter, pageable);
 	}
 
 	@PostMapping
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_ITEM_SAIDA_MEDICAMENTO')")
 	public ResponseEntity<ItemSaidaMedicamento> criar(@Validated @RequestBody ItemSaidaMedicamento itemSaidaMedicamento,
 			HttpServletResponse response) {
 		ItemSaidaMedicamento itemSaida = itemSaidaMedicamentoRepository.save(itemSaidaMedicamento);
@@ -63,6 +66,7 @@ public class ItemSaidaMedicamentoResource {
 	}
 
 	@GetMapping("/{codigo}")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ITEM_SAIDA_MEDICAMENTO')")
 	public ResponseEntity<ItemSaidaMedicamento> buscarPeloCodigo(@PathVariable Long codigo) {
 		return this.itemSaidaMedicamentoRepository.findById(codigo).map(itemSaida -> ResponseEntity.ok(itemSaida))
 				.orElse(ResponseEntity.notFound().build());

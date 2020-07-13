@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,17 +40,20 @@ public class PacienteResource {
 	private ApplicationEventPublisher publisher;
 
 	@GetMapping
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PACIENTE')")
 	public Page<Paciente> filtrar(PacienteFilter pacienteFilter, Pageable pageable) {
 		return pacienteRepository.filtrar(pacienteFilter, pageable);
 	}
 
 	@GetMapping("/{codigo}")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PACIENTE')")
 	public ResponseEntity<Paciente> buscarPeloCodigo(@PathVariable Long codigo) {
 		return this.pacienteRepository.findById(codigo).map(paciente -> ResponseEntity.ok(paciente))
 				.orElse(ResponseEntity.notFound().build());
 	}
 
 	@PostMapping
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PACIENTE')")
 	public ResponseEntity<Paciente> criar(@Validated @RequestBody Paciente paciente, HttpServletResponse response) {
 		Paciente pacienteSalvo = pacienteRepository.save(paciente);
 		publisher.publishEvent(new RecursoCriadoEvent(this, response, pacienteSalvo.getCodigo()));
@@ -60,11 +64,13 @@ public class PacienteResource {
 
 	@DeleteMapping("/{codigo}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@PreAuthorize("hasAuthority('ROLE_REMOVER_PACIENTE')")
 	public void remover(@PathVariable Long codigo) {
 		pacienteRepository.deleteById(codigo);
 	}
 
 	@PutMapping("/{codigo}")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PACIENTE')")
 	public ResponseEntity<Paciente> atualizar(@PathVariable Long codigo, @Validated @RequestBody Paciente paciente) {
 		Paciente pacienteSalvo = pacienteService.atualizar(codigo, paciente);
 		return ResponseEntity.ok(pacienteSalvo);

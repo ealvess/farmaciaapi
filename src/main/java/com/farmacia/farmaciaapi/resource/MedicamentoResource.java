@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,11 +40,13 @@ public class MedicamentoResource {
 	private ApplicationEventPublisher publisher;
 
 	@GetMapping
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_MEDICAMENTO')")
 	public Page<Medicamento> pesquisar(MedicamentoFilter medicamentoFilter, Pageable pageable) {
 		return medicamentoRepository.filtrar(medicamentoFilter, pageable);
 	}
 
 	@PostMapping
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_MEDICAMENTO')")
 	public ResponseEntity<Medicamento> criar(@Validated @RequestBody Medicamento medicamento,
 			HttpServletResponse response) {
 		Medicamento medicamentoSalvo = medicamentoRepository.save(medicamento);
@@ -54,6 +57,7 @@ public class MedicamentoResource {
 	}
 
 	@GetMapping("/{codigo}")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_MEDICAMENTO')")
 	public ResponseEntity<Medicamento> buscarPeloCodigo(@PathVariable Long codigo) {
 		return this.medicamentoRepository.findById(codigo).map(medicamento -> ResponseEntity.ok(medicamento))
 				.orElse(ResponseEntity.notFound().build());
@@ -61,11 +65,13 @@ public class MedicamentoResource {
 
 	@DeleteMapping("/{codigo}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@PreAuthorize("hasAuthority('ROLE_REMOVER_MEDICAMENTO')")
 	public void remover(@PathVariable Long codigo) {
 		medicamentoRepository.deleteById(codigo);
 	}
 
 	@PutMapping("/{codigo}")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_MEDICAMENTO')")
 	public ResponseEntity<Medicamento> atualizar(@PathVariable Long codigo,
 			@Validated @RequestBody Medicamento medicamento) {
 		Medicamento medicamentoSalvo = medicamentoService.atualizar(codigo, medicamento);
