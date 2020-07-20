@@ -43,7 +43,7 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		<!-- migrações flyway  -->
+		<!-- migrações flyway -->
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
@@ -113,6 +113,23 @@
 				</dependencies>
 			</plugin>
 			<!-- ... -->
+
+			<!-- INFORMANDO A CLASS MAIN -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>com.farmacia.farmaciaapi.FarmaciaapiApplication</mainClass>
+					<layout>JAR</layout>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
