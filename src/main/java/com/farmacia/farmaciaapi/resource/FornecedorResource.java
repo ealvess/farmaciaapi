@@ -24,6 +24,7 @@ import com.farmacia.farmaciaapi.event.RecursoCriadoEvent;
 import com.farmacia.farmaciaapi.model.Fornecedor;
 import com.farmacia.farmaciaapi.repository.FornecedorRepository;
 import com.farmacia.farmaciaapi.repository.filter.FornecedorFilter;
+import com.farmacia.farmaciaapi.repository.projection.ResumoFornecedores;
 import com.farmacia.farmaciaapi.service.FornecedorService;
 
 @RestController
@@ -43,6 +44,12 @@ public class FornecedorResource {
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_FORNECEDOR')")
 	public Page<Fornecedor> pesquisar(FornecedorFilter fornecedorFilter, Pageable pageable) {
 		return fornecedorRepository.filtrar(fornecedorFilter, pageable);
+	}
+	
+	@GetMapping(params = "resumo")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_MEDICAMENTO')")
+	public Page<ResumoFornecedores> resumo(FornecedorFilter fornecedorFilter, Pageable pageable) {
+		return fornecedorRepository.resumo(fornecedorFilter, pageable);
 	}
 
 	@PostMapping
@@ -77,6 +84,13 @@ public class FornecedorResource {
 			@Validated @RequestBody Fornecedor fornecedor) {
 		Fornecedor fornecedorSalvo = fornecedorService.atualizar(codigo, fornecedor);
 		return ResponseEntity.ok(fornecedorSalvo);
+	}
+	
+	@PutMapping("/{codigo}/ativo")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_FORNECEDOR')")
+	public void atualizarPropriedadeAtivo(@PathVariable Long codigo, @RequestBody Boolean ativo) {
+		fornecedorService.atualizarPropriedadeAtivo(codigo, ativo);
 	}
 
 }

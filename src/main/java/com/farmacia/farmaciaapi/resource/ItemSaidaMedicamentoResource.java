@@ -25,7 +25,7 @@ import com.farmacia.farmaciaapi.event.RecursoCriadoEvent;
 import com.farmacia.farmaciaapi.model.ItemSaidaMedicamento;
 import com.farmacia.farmaciaapi.repository.ItemSaidaMedicamentoRepository;
 import com.farmacia.farmaciaapi.repository.filter.ItemSaidaMedicamentoFilter;
-import com.farmacia.farmaciaapi.service.MedicamentoService;
+import com.farmacia.farmaciaapi.service.EntradaMedicamentoService;
 
 @RestController
 @RequestMapping("/saidamedicamentos")
@@ -35,7 +35,7 @@ public class ItemSaidaMedicamentoResource {
 	private ItemSaidaMedicamentoRepository itemSaidaMedicamentoRepository;
 
 	@Autowired
-	private MedicamentoService medicamentoService;
+	private EntradaMedicamentoService entradaMedicamentoService;
 
 	@Autowired
 	private ApplicationEventPublisher publisher;
@@ -75,7 +75,7 @@ public class ItemSaidaMedicamentoResource {
 	@PutMapping("/{codigo}/quantidade")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void atualizarQuantidade(@PathVariable Long codigo, Integer quantidade) {
-		medicamentoService.atualizarQuantidade(codigo, quantidade);
+		entradaMedicamentoService.atualizarQuantidade(codigo, quantidade);
 	}
 
 	public BigDecimal calcularValorTotal(Integer quantidade, BigDecimal valorUnitario) {

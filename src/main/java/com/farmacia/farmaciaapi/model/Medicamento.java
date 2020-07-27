@@ -1,9 +1,5 @@
 package com.farmacia.farmaciaapi.model;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,11 +7,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 
 @Entity
-@Table(name = "medicamento")
+@Table(name = "medicamentos")
 public class Medicamento {
 
 	@Id
@@ -23,46 +21,21 @@ public class Medicamento {
 	private Long codigo;
 
 	@NotNull
-	@Column(name = "data_entrada")
-	private LocalDate dataEntrada;
+	private String nome;
 
-	@NotNull
-	@ManyToOne
-	@JoinColumn(name = "codigo_fornecedor")
-	private Fornecedor fornecedor;
-
-	@NotNull
-	private String numeroNotaFiscal;
-
-	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "codigo_categoria")
-	private Categoria Categoria;
+	private Categoria categoria;
 
 	@NotNull
-	private String nomeMedicamento;
+	private String unidadeDeMedida;
 
+	private Integer quantidadeMinima;
+
+	private String localizacao;
+	
 	@NotNull
-	private String apresentacaoMedicamento;
-
-	private String volume;
-
-	@NotNull
-	@Column(name = "data_fabricacao")
-	private LocalDate dataFabricacao;
-
-	@NotNull
-	@Column(name = "validade")
-	private LocalDate validade;
-
-	@NotNull
-	private String lote;
-
-	@NotNull
-	private Integer quantidade;
-
-	@NotNull
-	private BigDecimal valorUnitario;
+	private Boolean ativo;
 
 	public Long getCodigo() {
 		return codigo;
@@ -72,100 +45,58 @@ public class Medicamento {
 		this.codigo = codigo;
 	}
 
-	public LocalDate getDataEntrada() {
-		return dataEntrada;
+	public String getNome() {
+		return nome;
 	}
 
-	public void setDataEntrada(LocalDate dataEntrada) {
-		this.dataEntrada = dataEntrada;
-	}
-
-	public Fornecedor getFornecedor() {
-		return fornecedor;
-	}
-
-	public void setFornecedor(Fornecedor fornecedor) {
-		this.fornecedor = fornecedor;
-	}
-
-	public String getNumeroNotaFiscal() {
-		return numeroNotaFiscal;
-	}
-
-	public void setNumeroNotaFiscal(String numeroNotaFiscal) {
-		this.numeroNotaFiscal = numeroNotaFiscal;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
 	public Categoria getCategoria() {
-		return Categoria;
+		return categoria;
 	}
 
 	public void setCategoria(Categoria categoria) {
-		Categoria = categoria;
+		this.categoria = categoria;
 	}
 
-	public String getNomeMedicamento() {
-		return nomeMedicamento;
+	public String getUnidadeDeMedida() {
+		return unidadeDeMedida;
 	}
 
-	public void setNomeMedicamento(String nomeMedicamento) {
-		this.nomeMedicamento = nomeMedicamento;
+	public void setUnidadeDeMedida(String unidadeDeMedida) {
+		this.unidadeDeMedida = unidadeDeMedida;
 	}
 
-	public String getApresentacaoMedicamento() {
-		return apresentacaoMedicamento;
+	public Integer getQuantidadeMinima() {
+		return quantidadeMinima;
 	}
 
-	public void setApresentacaoMedicamento(String apresentacaoMedicamento) {
-		this.apresentacaoMedicamento = apresentacaoMedicamento;
+	public void setQuantidadeMinima(Integer quantidadeMinima) {
+		this.quantidadeMinima = quantidadeMinima;
 	}
 
-	public String getVolume() {
-		return volume;
+	public String getLocalizacao() {
+		return localizacao;
 	}
 
-	public void setVolume(String volume) {
-		this.volume = volume;
+	public void setLocalizacao(String localizacao) {
+		this.localizacao = localizacao;
 	}
 
-	public LocalDate getDataFabricacao() {
-		return dataFabricacao;
+	public Boolean getAtivo() {
+		return ativo;
 	}
 
-	public void setDataFabricacao(LocalDate dataFabricacao) {
-		this.dataFabricacao = dataFabricacao;
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
 	}
-
-	public LocalDate getValidade() {
-		return validade;
-	}
-
-	public void setValidade(LocalDate validade) {
-		this.validade = validade;
-	}
-
-	public String getLote() {
-		return lote;
-	}
-
-	public void setLote(String lote) {
-		this.lote = lote;
-	}
-
-	public Integer getQuantidade() {
-		return quantidade;
-	}
-
-	public void setQuantidade(Integer quantidade) {
-		this.quantidade = quantidade;
-	}
-
-	public BigDecimal getValorUnitario() {
-		return valorUnitario;
-	}
-
-	public void setValorUnitario(BigDecimal valorUnitario) {
-		this.valorUnitario = valorUnitario;
+	
+	@JsonIgnore
+	@Transient
+	public boolean isInativo() {
+		return !this.ativo;
 	}
 
 	@Override

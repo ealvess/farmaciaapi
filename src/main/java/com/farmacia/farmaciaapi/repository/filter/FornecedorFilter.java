@@ -2,14 +2,16 @@ package com.farmacia.farmaciaapi.repository.filter;
 
 public class FornecedorFilter {
 
-	private String razaosocial;
+	private String nome;
 
-	public String getRazaosocial() {
-		return razaosocial;
+	public String getNome() {
+		return nome;
 	}
 
-	public void setRazaosocial(String razaosocial) {
-		this.razaosocial = razaosocial;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
+
+	
 
 }

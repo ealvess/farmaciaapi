@@ -28,84 +28,80 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.farmacia.farmaciaapi.event.RecursoCriadoEvent;
 import com.farmacia.farmaciaapi.exceptionhandler.FarmaciaExceptionHandler.Erro;
-import com.farmacia.farmaciaapi.model.Medicamento;
-import com.farmacia.farmaciaapi.repository.MedicamentoRepository;
-import com.farmacia.farmaciaapi.repository.filter.MedicamentoFilter;
-import com.farmacia.farmaciaapi.service.MedicamentoService;
+import com.farmacia.farmaciaapi.model.EntradaMedicamento;
+import com.farmacia.farmaciaapi.repository.EntradaMedicamentoRepository;
+import com.farmacia.farmaciaapi.repository.filter.EntradaMedicamentoFilter;
+import com.farmacia.farmaciaapi.repository.projection.ResumoMedicamento;
+import com.farmacia.farmaciaapi.service.EntradaMedicamentoService;
 import com.farmacia.farmaciaapi.service.exception.ObjetoInexistenteOuInativoException;
 
 @RestController
-@RequestMapping("/medicamentos")
-public class MedicamentoResource {
+@RequestMapping("/entradamedicamentos")
+public class EntradaMedicamentoResource {
 
 	@Autowired
-	private MedicamentoRepository medicamentoRepository;
-	
+	private EntradaMedicamentoRepository entradaMedicamentoRepository;
+
 	@Autowired
-	private MedicamentoService medicamentoService;
+	private EntradaMedicamentoService entradaMedicamentoService;
 
 	@Autowired
 	private ApplicationEventPublisher publisher;
 	
-
 	@Autowired
 	private MessageSource messageSource;
-	
-	@GetMapping
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA')")
-	public Page<Medicamento> filtrar(MedicamentoFilter medicamentoFilter, Pageable pageable) {
-		return medicamentoRepository.filtrar(medicamentoFilter, pageable);
-	}
- 
-	@PostMapping
-	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA')")
-	public ResponseEntity<Medicamento> criar(@Validated @RequestBody Medicamento medicamento, HttpServletResponse response) {
-		Medicamento medicamentoSalvo = medicamentoService.salvar(medicamento);
 
+	@GetMapping
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_MEDICAMENTO')")
+	public Page<EntradaMedicamento> pesquisar(EntradaMedicamentoFilter entradaMedicamentoFilter, Pageable pageable) {
+		return entradaMedicamentoRepository.filtrar(entradaMedicamentoFilter, pageable);
+	}
+	
+	@GetMapping(params = "resumo")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_MEDICAMENTO')")
+	public Page<ResumoMedicamento> resumo(EntradaMedicamentoFilter entradaMedicamentoFilter, Pageable pageable) {
+		return entradaMedicamentoRepository.resumo(entradaMedicamentoFilter, pageable);
+	}
+
+	@PostMapping
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_MEDICAMENTO')")
+	public ResponseEntity<EntradaMedicamento> criar(@Validated @RequestBody EntradaMedicamento entradaMedicamento,
+			HttpServletResponse response) {
+		EntradaMedicamento medicamentoSalvo = entradaMedicamentoService.salvar(entradaMedicamento);
 		publisher.publishEvent(new RecursoCriadoEvent(this, response, medicamentoSalvo.getCodigo()));
 		;
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(medicamentoSalvo);
 	}
-	
 
 	@GetMapping("/{codigo}")
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA')")
-	public ResponseEntity<Medicamento> buscarPeloCodigo(@PathVariable Long codigo) {
-		return this.medicamentoRepository.findById(codigo).map(medicamento -> ResponseEntity.ok(medicamento))
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_MEDICAMENTO')")
+	public ResponseEntity<EntradaMedicamento> buscarPeloCodigo(@PathVariable Long codigo) {
+		return this.entradaMedicamentoRepository.findById(codigo).map(medicamento -> ResponseEntity.ok(medicamento))
 				.orElse(ResponseEntity.notFound().build());
 	}
 
 	@DeleteMapping("/{codigo}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@PreAuthorize("hasAuthority('ROLE_REMOVER_CATEGORIA')")
+	@PreAuthorize("hasAuthority('ROLE_REMOVER_MEDICAMENTO')")
 	public void remover(@PathVariable Long codigo) {
-		medicamentoRepository.deleteById(codigo);
+		entradaMedicamentoRepository.deleteById(codigo);
 	}
 
 	@PutMapping("/{codigo}")
-	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA')")
-	public ResponseEntity<Medicamento> atualizar(@PathVariable Long codigo, @Validated @RequestBody Medicamento medicamento) {
-		Medicamento medicamentoSalvo = medicamentoService.atualizar(codigo, medicamento);
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_MEDICAMENTO')")
+	public ResponseEntity<EntradaMedicamento> atualizar(@PathVariable Long codigo,
+			@Validated @RequestBody EntradaMedicamento entradaMedicamento) {
+		EntradaMedicamento medicamentoSalvo = entradaMedicamentoService.atualizar(codigo, entradaMedicamento);
 		return ResponseEntity.ok(medicamentoSalvo);
-	}
-	
-
-	@PutMapping("/{codigo}/ativo")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA')")
-	public void atualizarPropriedadeAtivo(@PathVariable Long codigo, @RequestBody Boolean ativo) {
-		medicamentoService.atualizarPropriedadeAtivo(codigo, ativo);
 	}
 	
 	@ExceptionHandler({ObjetoInexistenteOuInativoException.class})
 	public ResponseEntity<Object> handleCategoriaInexistenteOuInativaException(ObjetoInexistenteOuInativoException ex){
-		String mensagemUsuario = messageSource.getMessage("categoria.inexistente-ou-inativa", null, LocaleContextHolder.getLocale());
+		String mensagemUsuario = messageSource.getMessage("medicamentooufornecedor.inexistente-ou-inativa", null, LocaleContextHolder.getLocale());
 		String mensagemDesenvolvedor = ex.toString();
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
 		return ResponseEntity.badRequest().body(erros);
 	}
-	
-	
-}
 
+}

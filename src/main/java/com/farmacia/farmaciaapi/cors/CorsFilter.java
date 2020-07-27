@@ -21,29 +21,31 @@ import com.farmacia.farmaciaapi.config.property.FarmaciaApiProperty;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorsFilter implements Filter {
 
-@Autowired
-private FarmaciaApiProperty farmaciaApiProperty;
-	
+	@Autowired
+	private FarmaciaApiProperty farmaciaApiProperty;
+
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
 			throws IOException, ServletException {
-		
+
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) resp;
-		
+
 		response.setHeader("Access-Control-Allow-Origin", farmaciaApiProperty.getOriginPermitida());
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-		
-		if ("OPTIONS".equals(request.getMethod()) && farmaciaApiProperty.getOriginPermitida().equals(request.getHeader("Origin"))) {
+		response.setHeader("Access-Control-Allow-Credentials", "true");
+
+		if ("OPTIONS".equals(request.getMethod())
+				&& farmaciaApiProperty.getOriginPermitida().equals(request.getHeader("Origin"))) {
 			response.setHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT, OPTIONS");
-        	response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept");
-        	response.setHeader("Access-Control-Max-Age", "3600");
-			
+			response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept");
+			response.setHeader("Access-Control-Max-Age", "3600");
+
 			response.setStatus(HttpServletResponse.SC_OK);
 		} else {
+
 			chain.doFilter(req, resp);
 		}
-		
+
 	}
 
 }

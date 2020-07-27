@@ -1,11 +1,11 @@
 package com.farmacia.farmaciaapi.resource;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.farmacia.farmaciaapi.event.RecursoCriadoEvent;
 import com.farmacia.farmaciaapi.model.Categoria;
 import com.farmacia.farmaciaapi.repository.CategoriaRepository;
+import com.farmacia.farmaciaapi.repository.filter.CategoriaFilter;
 import com.farmacia.farmaciaapi.service.CategoriaService;
 
 @RestController
@@ -40,8 +41,8 @@ public class CategoriaResource {
 
 	@GetMapping
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA')")
-	public List<Categoria> listar() {
-		return categoriaRepository.findAll();
+	public Page<Categoria> filtrar(CategoriaFilter categoriaFilter, Pageable pageable) {
+		return categoriaRepository.filtrar(categoriaFilter, pageable);
 	}
 
 	@PostMapping
@@ -74,6 +75,13 @@ public class CategoriaResource {
 	public ResponseEntity<Categoria> atualizar(@PathVariable Long codigo, @Validated @RequestBody Categoria categoria) {
 		Categoria categoriaSalva = categoriaService.atualizar(codigo, categoria);
 		return ResponseEntity.ok(categoriaSalva);
+	}
+	
+	@PutMapping("/{codigo}/ativo")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA')")
+	public void atualizarPropriedadeAtivo(@PathVariable Long codigo, @RequestBody Boolean ativo) {
+		categoriaService.atualizarPropriedadeAtivo(codigo, ativo);
 	}
 
 }

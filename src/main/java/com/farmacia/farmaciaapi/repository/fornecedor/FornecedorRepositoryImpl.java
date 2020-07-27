@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 import com.farmacia.farmaciaapi.model.Fornecedor;
 import com.farmacia.farmaciaapi.model.Fornecedor_;
 import com.farmacia.farmaciaapi.repository.filter.FornecedorFilter;
+import com.farmacia.farmaciaapi.repository.projection.ResumoFornecedores;
 
 public class FornecedorRepositoryImpl implements FornecedorRepositoryQuery {
 
@@ -41,21 +42,45 @@ public class FornecedorRepositoryImpl implements FornecedorRepositoryQuery {
 
 		return new PageImpl<>(query.getResultList(), pageable, total(fornecedorFilter));
 	}
+	
+	@Override
+	public Page<ResumoFornecedores> resumo(FornecedorFilter fornecedorFilter, Pageable pageable) {
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaQuery<ResumoFornecedores> criteria = builder.createQuery(ResumoFornecedores.class);
+		Root<Fornecedor> root = criteria.from(Fornecedor.class);
+		
+		criteria.select(builder.construct(ResumoFornecedores.class, 
+				root.get(Fornecedor_.codigo),
+				root.get(Fornecedor_.nomeFantasia),
+				root.get(Fornecedor_.cnpj),
+				root.get(Fornecedor_.telefone),
+				root.get(Fornecedor_.telefone2),
+				root.get(Fornecedor_.telefone3),
+				root.get(Fornecedor_.email)));
+		
+		Predicate[] predicates = criarRestricoes(fornecedorFilter, builder, root);
+		criteria.where(predicates);
+
+		TypedQuery<ResumoFornecedores> query = manager.createQuery(criteria);
+		adiconarRestricoesDePaginacao(query, pageable);
+
+		return new PageImpl<>(query.getResultList(), pageable, total(fornecedorFilter));
+	}
 
 	private Predicate[] criarRestricoes(FornecedorFilter fornecedorFilter, CriteriaBuilder builder,
 			Root<Fornecedor> root) {
 
 		List<Predicate> predicates = new ArrayList<>();
 
-		if (!StringUtils.isEmpty(fornecedorFilter.getRazaosocial())) {
-			predicates.add(builder.like(builder.lower(root.get(Fornecedor_.razaoSocial)),
-					"%" + fornecedorFilter.getRazaosocial().toLowerCase() + "%"));
+		if (!StringUtils.isEmpty(fornecedorFilter.getNome())) {
+			predicates.add(builder.like(builder.lower(root.get(Fornecedor_.nomeFantasia)),
+					"%" + fornecedorFilter.getNome().toLowerCase() + "%"));
 		}
 
 		return predicates.toArray(new Predicate[predicates.size()]);
 	}
 
-	private void adiconarRestricoesDePaginacao(TypedQuery<Fornecedor> query, Pageable pageable) {
+	private void adiconarRestricoesDePaginacao(TypedQuery<?> query, Pageable pageable) {
 		int paginaAtual = pageable.getPageNumber();
 		int totalDeRegistorsPorPagina = pageable.getPageSize();
 		int primeiroRegistroPorPagina = paginaAtual * totalDeRegistorsPorPagina;
@@ -76,5 +101,4 @@ public class FornecedorRepositoryImpl implements FornecedorRepositoryQuery {
 
 		return manager.createQuery(criteria).getSingleResult();
 	}
-
 }

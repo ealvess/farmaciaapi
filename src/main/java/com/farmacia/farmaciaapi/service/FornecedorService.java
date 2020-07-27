@@ -16,11 +16,22 @@ public class FornecedorService {
 
 	public Fornecedor atualizar(Long codigo, Fornecedor fornecedor) {
 
-		Fornecedor fornecedorSalvo = this.fornecedorRepository.findById(codigo)
-				.orElseThrow(() -> new EmptyResultDataAccessException(1));
+		Fornecedor fornecedorSalvo = buscarFornecedorPorCodigo(codigo);
 
 		BeanUtils.copyProperties(fornecedor, fornecedorSalvo, "codigo");
 
 		return this.fornecedorRepository.save(fornecedorSalvo);
+	}
+
+	public Fornecedor buscarFornecedorPorCodigo(Long codigo) {
+		Fornecedor fornecedorSalvo = this.fornecedorRepository.findById(codigo)
+				.orElseThrow(() -> new EmptyResultDataAccessException(1));
+		return fornecedorSalvo;
+	}
+
+	public void atualizarPropriedadeAtivo(Long codigo, Boolean ativo) {
+		Fornecedor fornecedorSalvo = buscarFornecedorPorCodigo(codigo);
+		fornecedorSalvo.setAtivo(ativo);
+		fornecedorRepository.save(fornecedorSalvo);		
 	}
 }

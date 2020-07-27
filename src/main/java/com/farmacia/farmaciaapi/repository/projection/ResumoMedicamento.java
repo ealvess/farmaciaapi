@@ -6,20 +6,17 @@ import java.time.LocalDate;
 public class ResumoMedicamento {
 
 	private Long codigo;
-	private String nomeMedicamento;
-	private String categoria;
+	private String medicamento;
 	private String apresentacao;
 	private LocalDate dataEntrada;
 	private LocalDate dataValidade;
 	private Integer quantidade;
 	private BigDecimal valorUnitario;
 
-	public ResumoMedicamento(Long codigo, String nomeMedicamento, String categoria, String apresentacao,
-			LocalDate dataEntrada, LocalDate dataValidade, Integer quantidade, BigDecimal valorUnitario) {
-		super();
+	public ResumoMedicamento(Long codigo, String medicamento, String apresentacao, LocalDate dataEntrada,
+			LocalDate dataValidade, Integer quantidade, BigDecimal valorUnitario) {
 		this.codigo = codigo;
-		this.nomeMedicamento = nomeMedicamento;
-		this.categoria = categoria;
+		this.medicamento = medicamento;
 		this.apresentacao = apresentacao;
 		this.dataEntrada = dataEntrada;
 		this.dataValidade = dataValidade;
@@ -35,20 +32,12 @@ public class ResumoMedicamento {
 		this.codigo = codigo;
 	}
 
-	public String getNomeMedicamento() {
-		return nomeMedicamento;
+	public String getMedicamento() {
+		return medicamento;
 	}
 
-	public void setNomeMedicamento(String nomeMedicamento) {
-		this.nomeMedicamento = nomeMedicamento;
-	}
-
-	public String getCategoria() {
-		return categoria;
-	}
-
-	public void setCategoria(String categoria) {
-		this.categoria = categoria;
+	public void setMedicamento(String medicamento) {
+		this.medicamento = medicamento;
 	}
 
 	public String getApresentacao() {

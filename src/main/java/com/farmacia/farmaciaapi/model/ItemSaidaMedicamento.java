@@ -32,8 +32,8 @@ public class ItemSaidaMedicamento {
 
 	@NotNull
 	@ManyToOne
-	@JoinColumn(name = "codigo_medicamento")
-	private Medicamento medicamento;
+	@JoinColumn(name = "codigo_entrada_medicamento")
+	private EntradaMedicamento entradaMedicamento;
 
 	@NotNull
 	@Column(name = "data_saida")
@@ -69,12 +69,12 @@ public class ItemSaidaMedicamento {
 		this.centroDeCusto = centroDeCusto;
 	}
 
-	public Medicamento getMedicamento() {
-		return medicamento;
+	public EntradaMedicamento getMedicamento() {
+		return entradaMedicamento;
 	}
 
-	public void setMedicamento(Medicamento medicamento) {
-		this.medicamento = medicamento;
+	public void setMedicamento(EntradaMedicamento entradaMedicamento) {
+		this.entradaMedicamento = entradaMedicamento;
 	}
 
 	public LocalDate getDataSaida() {
