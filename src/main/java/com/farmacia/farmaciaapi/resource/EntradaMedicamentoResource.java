@@ -31,7 +31,7 @@ import com.farmacia.farmaciaapi.exceptionhandler.FarmaciaExceptionHandler.Erro;
 import com.farmacia.farmaciaapi.model.EntradaMedicamento;
 import com.farmacia.farmaciaapi.repository.EntradaMedicamentoRepository;
 import com.farmacia.farmaciaapi.repository.filter.EntradaMedicamentoFilter;
-import com.farmacia.farmaciaapi.repository.projection.ResumoMedicamento;
+import com.farmacia.farmaciaapi.repository.projection.ResumoEntradaMedicamento;
 import com.farmacia.farmaciaapi.service.EntradaMedicamentoService;
 import com.farmacia.farmaciaapi.service.exception.ObjetoInexistenteOuInativoException;
 
@@ -59,7 +59,7 @@ public class EntradaMedicamentoResource {
 	
 	@GetMapping(params = "resumo")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_MEDICAMENTO')")
-	public Page<ResumoMedicamento> resumo(EntradaMedicamentoFilter entradaMedicamentoFilter, Pageable pageable) {
+	public Page<ResumoEntradaMedicamento> resumo(EntradaMedicamentoFilter entradaMedicamentoFilter, Pageable pageable) {
 		return entradaMedicamentoRepository.resumo(entradaMedicamentoFilter, pageable);
 	}
 

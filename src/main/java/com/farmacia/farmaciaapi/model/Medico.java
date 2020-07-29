@@ -14,99 +14,113 @@ import com.sun.istack.NotNull;
 @Entity
 @Table(name = "medico")
 public class Medico {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
-	
+
 	@NotNull
 	private String nome;
-	
+
 	@NotNull
 	private String cpf;
 	private String rg;
-	
+
 	@NotNull
 	private String crm;
-	
+
 	@Column(name = "data_inscricao")
 	private LocalDate dataInscricao;
-	
-	@NotNull
-	private String situacao;
+
 	private String email;
 	private String telefone;
-	
+
 	@NotNull
 	private String celular;
-	private String sexo;
 	
+	@NotNull
+	private Boolean ativo;
+
 	public Long getCodigo() {
 		return codigo;
 	}
+
 	public void setCodigo(Long codigo) {
 		this.codigo = codigo;
 	}
+
 	public String getNome() {
 		return nome;
 	}
+
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+
 	public String getCpf() {
 		return cpf;
 	}
+
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
+
 	public String getRg() {
 		return rg;
 	}
+
 	public void setRg(String rg) {
 		this.rg = rg;
 	}
+
 	public String getCrm() {
 		return crm;
 	}
+
 	public void setCrm(String crm) {
 		this.crm = crm;
 	}
+
 	public LocalDate getDataInscricao() {
 		return dataInscricao;
 	}
+
 	public void setDataInscricao(LocalDate dataInscricao) {
 		this.dataInscricao = dataInscricao;
 	}
-	public String getSituacao() {
-		return situacao;
-	}
-	public void setSituacao(String situacao) {
-		this.situacao = situacao;
-	}
+
 	public String getEmail() {
 		return email;
 	}
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
 	public String getTelefone() {
 		return telefone;
 	}
+
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
 	}
+
 	public String getCelular() {
 		return celular;
 	}
+
 	public void setCelular(String celular) {
 		this.celular = celular;
 	}
-	public String getSexo() {
-		return sexo;
+
+	public Boolean getAtivo() {
+		return ativo;
 	}
-	public void setSexo(String sexo) {
-		this.sexo = sexo;
+
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -114,6 +128,7 @@ public class Medico {
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -130,6 +145,5 @@ public class Medico {
 			return false;
 		return true;
 	}
-	
-	
+
 }

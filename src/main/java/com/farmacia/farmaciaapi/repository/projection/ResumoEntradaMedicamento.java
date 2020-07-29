@@ -3,7 +3,7 @@ package com.farmacia.farmaciaapi.repository.projection;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class ResumoMedicamento {
+public class ResumoEntradaMedicamento {
 
 	private Long codigo;
 	private String medicamento;
@@ -13,7 +13,7 @@ public class ResumoMedicamento {
 	private Integer quantidade;
 	private BigDecimal valorUnitario;
 
-	public ResumoMedicamento(Long codigo, String medicamento, String apresentacao, LocalDate dataEntrada,
+	public ResumoEntradaMedicamento(Long codigo, String medicamento, String apresentacao, LocalDate dataEntrada,
 			LocalDate dataValidade, Integer quantidade, BigDecimal valorUnitario) {
 		this.codigo = codigo;
 		this.medicamento = medicamento;

@@ -20,7 +20,7 @@ import com.farmacia.farmaciaapi.model.EntradaMedicamento;
 import com.farmacia.farmaciaapi.model.EntradaMedicamento_;
 import com.farmacia.farmaciaapi.model.Medicamento_;
 import com.farmacia.farmaciaapi.repository.filter.EntradaMedicamentoFilter;
-import com.farmacia.farmaciaapi.repository.projection.ResumoMedicamento;
+import com.farmacia.farmaciaapi.repository.projection.ResumoEntradaMedicamento;
 
 public class EntradaMedicamentoRepositoryImpl implements EntradaMedicamentoRepositoryQuery {
 
@@ -45,12 +45,12 @@ public class EntradaMedicamentoRepositoryImpl implements EntradaMedicamentoRepos
 	}
 	
 	@Override
-	public Page<ResumoMedicamento> resumo(EntradaMedicamentoFilter entradaMedicamentoFilter, Pageable pageable) {
+	public Page<ResumoEntradaMedicamento> resumo(EntradaMedicamentoFilter entradaMedicamentoFilter, Pageable pageable) {
 		CriteriaBuilder builder = manager.getCriteriaBuilder();
-		CriteriaQuery<ResumoMedicamento> criteria = builder.createQuery(ResumoMedicamento.class);
+		CriteriaQuery<ResumoEntradaMedicamento> criteria = builder.createQuery(ResumoEntradaMedicamento.class);
 		Root<EntradaMedicamento> root = criteria.from(EntradaMedicamento.class);
 		
-		criteria.select(builder.construct(ResumoMedicamento.class, 
+		criteria.select(builder.construct(ResumoEntradaMedicamento.class, 
 				root.get(EntradaMedicamento_.codigo), 
 				root.get(EntradaMedicamento_.medicamento).get(Medicamento_.nome),
 				root.get(EntradaMedicamento_.medicamento).get(Medicamento_.unidadeDeMedida),
@@ -62,7 +62,7 @@ public class EntradaMedicamentoRepositoryImpl implements EntradaMedicamentoRepos
 		Predicate[] predicates = criarRestricoes(entradaMedicamentoFilter, builder, root);
 		criteria.where(predicates);
 
-		TypedQuery<ResumoMedicamento> query = manager.createQuery(criteria);
+		TypedQuery<ResumoEntradaMedicamento> query = manager.createQuery(criteria);
 		adiconarRestricoesDePaginacao(query, pageable);
 
 		return new PageImpl<>(query.getResultList(), pageable, total(entradaMedicamentoFilter));

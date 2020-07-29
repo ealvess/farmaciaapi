@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,6 +26,7 @@ import com.farmacia.farmaciaapi.event.RecursoCriadoEvent;
 import com.farmacia.farmaciaapi.model.Medico;
 import com.farmacia.farmaciaapi.repository.MedicoRepository;
 import com.farmacia.farmaciaapi.repository.filter.MedicoFilter;
+import com.farmacia.farmaciaapi.repository.projection.ResumoMedicos;
 import com.farmacia.farmaciaapi.service.MedicoService;
 
 @RestController
@@ -41,8 +44,20 @@ public class MedicoResource {
 
 	@GetMapping
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_MEDICO')")
-	public List<Medico> pesquisar(MedicoFilter medicoFilter) {
-		return medicoRepository.filtrar(medicoFilter);
+	public Page<Medico> pesquisar(MedicoFilter medicoFilter, Pageable pageable) {
+		return medicoRepository.filtrar(medicoFilter, pageable);
+	}
+	
+	@GetMapping(params = "resumo")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_MEDICO')")
+	public Page<ResumoMedicos> resumo(MedicoFilter medicoFilter, Pageable pageable) {
+		return medicoRepository.resumo(medicoFilter, pageable);
+	}
+	
+	@GetMapping("/listar")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_MEDICO')")
+	public List<Medico> listarTodas(){
+		return medicoRepository.findAll();
 	}
 
 	@GetMapping("/{codigo}")
@@ -74,6 +89,13 @@ public class MedicoResource {
 	@PreAuthorize("hasAuthority('ROLE_REMOVER_MEDICO')")
 	public void remover(@PathVariable Long codigo) {
 		medicoRepository.deleteById(codigo);
+	}
+	
+	@PutMapping("/{codigo}/ativo")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_FORNECEDOR')")
+	public void atualizarPropriedadeAtivo(@PathVariable Long codigo, @RequestBody Boolean ativo) {
+		medicoService.atualizarPropriedadeAtivo(codigo, ativo);
 	}
 
 }

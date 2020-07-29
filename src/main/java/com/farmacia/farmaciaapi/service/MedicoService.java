@@ -16,11 +16,27 @@ public class MedicoService {
 
 	public Medico atualizar(Long codigo, Medico medico) {
 
-		Medico medicoSalvo = this.medicoRepository.findById(codigo)
-				.orElseThrow(() -> new EmptyResultDataAccessException(1));
+		Medico medicoSalvo = buscarMedicoSalvoPorCodigo(codigo);
 
 		BeanUtils.copyProperties(medico, medicoSalvo, "codigo");
 
 		return this.medicoRepository.save(medicoSalvo);
 	}
+	
+	public void atualizarPropriedadeAtivo(Long codigo, Boolean ativo) {
+		Medico medicoSalvo = buscarMedicoSalvoPorCodigo(codigo);
+		medicoSalvo.setAtivo(ativo);
+		medicoRepository.save(medicoSalvo);
+		
+	}
+
+	public Medico buscarMedicoSalvoPorCodigo(Long codigo) {
+		Medico medicoSalvo = this.medicoRepository.findById(codigo)
+				.orElseThrow(() -> new EmptyResultDataAccessException(1));
+		return medicoSalvo;
+	}
+
+	
+
+	
 }

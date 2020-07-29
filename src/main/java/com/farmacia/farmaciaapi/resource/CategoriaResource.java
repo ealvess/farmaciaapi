@@ -1,5 +1,7 @@
 package com.farmacia.farmaciaapi.resource;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,12 @@ public class CategoriaResource {
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA')")
 	public Page<Categoria> filtrar(CategoriaFilter categoriaFilter, Pageable pageable) {
 		return categoriaRepository.filtrar(categoriaFilter, pageable);
+	}
+	
+	@GetMapping("/listar")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA')")
+	public List<Categoria> listarTodas(){
+		return categoriaRepository.findAll();
 	}
 
 	@PostMapping

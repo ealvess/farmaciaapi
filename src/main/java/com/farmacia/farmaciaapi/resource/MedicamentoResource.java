@@ -52,13 +52,19 @@ public class MedicamentoResource {
 	private MessageSource messageSource;
 	
 	@GetMapping
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA')")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_MEDICAMENTO')")
 	public Page<Medicamento> filtrar(MedicamentoFilter medicamentoFilter, Pageable pageable) {
 		return medicamentoRepository.filtrar(medicamentoFilter, pageable);
 	}
+	
+	@GetMapping("/listar")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_MEDICAMENTO')")
+	public List<Medicamento> listarTodas(){
+		return medicamentoRepository.findAll();
+	}
  
 	@PostMapping
-	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA')")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_MEDICAMENTO')")
 	public ResponseEntity<Medicamento> criar(@Validated @RequestBody Medicamento medicamento, HttpServletResponse response) {
 		Medicamento medicamentoSalvo = medicamentoService.salvar(medicamento);
 
@@ -70,7 +76,7 @@ public class MedicamentoResource {
 	
 
 	@GetMapping("/{codigo}")
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA')")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_MEDICAMENTO')")
 	public ResponseEntity<Medicamento> buscarPeloCodigo(@PathVariable Long codigo) {
 		return this.medicamentoRepository.findById(codigo).map(medicamento -> ResponseEntity.ok(medicamento))
 				.orElse(ResponseEntity.notFound().build());
@@ -78,13 +84,13 @@ public class MedicamentoResource {
 
 	@DeleteMapping("/{codigo}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@PreAuthorize("hasAuthority('ROLE_REMOVER_CATEGORIA')")
+	@PreAuthorize("hasAuthority('ROLE_REMOVER_MEDICAMENTO')")
 	public void remover(@PathVariable Long codigo) {
 		medicamentoRepository.deleteById(codigo);
 	}
 
 	@PutMapping("/{codigo}")
-	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA')")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_MEDICAMENTO')")
 	public ResponseEntity<Medicamento> atualizar(@PathVariable Long codigo, @Validated @RequestBody Medicamento medicamento) {
 		Medicamento medicamentoSalvo = medicamentoService.atualizar(codigo, medicamento);
 		return ResponseEntity.ok(medicamentoSalvo);
@@ -93,7 +99,7 @@ public class MedicamentoResource {
 
 	@PutMapping("/{codigo}/ativo")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA')")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_MEDICAMENTO')")
 	public void atualizarPropriedadeAtivo(@PathVariable Long codigo, @RequestBody Boolean ativo) {
 		medicamentoService.atualizarPropriedadeAtivo(codigo, ativo);
 	}

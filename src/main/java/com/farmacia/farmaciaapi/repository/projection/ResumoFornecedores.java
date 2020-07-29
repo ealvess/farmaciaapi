@@ -9,10 +9,10 @@ public class ResumoFornecedores {
 	private String telefone2;
 	private String telefone3;
 	private String email;
+	private Boolean ativo;
 
 	public ResumoFornecedores(Long codigo, String nomeFantasia, String cnpj, String telefone, String telefone2,
-			String telefone3, String email) {
-		super();
+			String telefone3, String email, Boolean ativo) {
 		this.codigo = codigo;
 		this.nomeFantasia = nomeFantasia;
 		this.cnpj = cnpj;
@@ -20,6 +20,7 @@ public class ResumoFornecedores {
 		this.telefone2 = telefone2;
 		this.telefone3 = telefone3;
 		this.email = email;
+		this.ativo = ativo;
 	}
 
 	public Long getCodigo() {
@@ -76,6 +77,14 @@ public class ResumoFornecedores {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Boolean getAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
 	}
 
 }

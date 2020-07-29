@@ -42,7 +42,7 @@ public class FornecedorRepositoryImpl implements FornecedorRepositoryQuery {
 
 		return new PageImpl<>(query.getResultList(), pageable, total(fornecedorFilter));
 	}
-	
+
 	@Override
 	public Page<ResumoFornecedores> resumo(FornecedorFilter fornecedorFilter, Pageable pageable) {
 		CriteriaBuilder builder = manager.getCriteriaBuilder();
@@ -56,7 +56,8 @@ public class FornecedorRepositoryImpl implements FornecedorRepositoryQuery {
 				root.get(Fornecedor_.telefone),
 				root.get(Fornecedor_.telefone2),
 				root.get(Fornecedor_.telefone3),
-				root.get(Fornecedor_.email)));
+				root.get(Fornecedor_.email),
+				root.get(Fornecedor_.ativo)));
 		
 		Predicate[] predicates = criarRestricoes(fornecedorFilter, builder, root);
 		criteria.where(predicates);

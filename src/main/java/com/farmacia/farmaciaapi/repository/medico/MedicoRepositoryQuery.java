@@ -1,11 +1,14 @@
 package com.farmacia.farmaciaapi.repository.medico;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.farmacia.farmaciaapi.model.Medico;
 import com.farmacia.farmaciaapi.repository.filter.MedicoFilter;
+import com.farmacia.farmaciaapi.repository.projection.ResumoMedicos;
 
 public interface MedicoRepositoryQuery {
 	
-	public List<Medico> filtrar(MedicoFilter medicoFilter);
+	public Page<Medico> filtrar(MedicoFilter medicoFilter, Pageable pageable);
+	public Page<ResumoMedicos> resumo(MedicoFilter medicoFilter, Pageable pageable);
 }
