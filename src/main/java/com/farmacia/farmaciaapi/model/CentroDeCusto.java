@@ -19,6 +19,9 @@ public class CentroDeCusto {
 	@NotNull
 	private String nome;
 
+	@NotNull
+	private Boolean ativo;
+
 	public Long getCodigo() {
 		return codigo;
 	}
@@ -33,6 +36,14 @@ public class CentroDeCusto {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public Boolean getAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
 	}
 
 	@Override

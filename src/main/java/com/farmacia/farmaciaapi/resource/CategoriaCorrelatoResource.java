@@ -23,40 +23,40 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.farmacia.farmaciaapi.event.RecursoCriadoEvent;
-import com.farmacia.farmaciaapi.model.Categoria;
-import com.farmacia.farmaciaapi.repository.CategoriaRepository;
-import com.farmacia.farmaciaapi.repository.filter.CategoriaFilter;
-import com.farmacia.farmaciaapi.service.CategoriaService;
+import com.farmacia.farmaciaapi.model.CategoriaCorrelato;
+import com.farmacia.farmaciaapi.repository.CategoriaCorrelatoRepository;
+import com.farmacia.farmaciaapi.repository.filter.CategoriaCorrelatoFilter;
+import com.farmacia.farmaciaapi.service.CategoriaCorrelatoService;
 
 @RestController
-@RequestMapping("/categorias")
-public class CategoriaResource {
+@RequestMapping("/categoriascorrelato")
+public class CategoriaCorrelatoResource {
 
 	@Autowired
-	private CategoriaRepository categoriaRepository;
+	private CategoriaCorrelatoRepository categoriaRepository;
 
 	@Autowired
-	private CategoriaService categoriaService;
+	private CategoriaCorrelatoService categoriaService;
 
 	@Autowired
 	private ApplicationEventPublisher publisher;
 
 	@GetMapping
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA_DE_MEDICAMENTO')")
-	public Page<Categoria> filtrar(CategoriaFilter categoriaFilter, Pageable pageable) {
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA_DE_CORRELATO')")
+	public Page<CategoriaCorrelato> filtrar(CategoriaCorrelatoFilter categoriaFilter, Pageable pageable) {
 		return categoriaRepository.filtrar(categoriaFilter, pageable);
 	}
 	
 	@GetMapping("/listar")
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA_DE_MEDICAMENTO')")
-	public List<Categoria> listarTodas(){
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA_DE_CORRELATO')")
+	public List<CategoriaCorrelato> listarTodas(){
 		return categoriaRepository.findAll();
 	}
 
 	@PostMapping
-	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA_DE_MEDICAMENTO')")
-	public ResponseEntity<Categoria> criar(@Validated @RequestBody Categoria categoria, HttpServletResponse response) {
-		Categoria categoriaSalva = categoriaRepository.save(categoria);
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA_DE_CORRELATO')")
+	public ResponseEntity<CategoriaCorrelato> criar(@Validated @RequestBody CategoriaCorrelato categoria, HttpServletResponse response) {
+		CategoriaCorrelato categoriaSalva = categoriaRepository.save(categoria);
 
 		publisher.publishEvent(new RecursoCriadoEvent(this, response, categoriaSalva.getCodigo()));
 		;
@@ -65,29 +65,29 @@ public class CategoriaResource {
 	}
 
 	@GetMapping("/{codigo}")
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA_DE_MEDICAMENTO')")
-	public ResponseEntity<Categoria> buscarPeloCodigo(@PathVariable Long codigo) {
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA_DE_CORRELATO')")
+	public ResponseEntity<CategoriaCorrelato> buscarPeloCodigo(@PathVariable Long codigo) {
 		return this.categoriaRepository.findById(codigo).map(categoria -> ResponseEntity.ok(categoria))
 				.orElse(ResponseEntity.notFound().build());
 	}
 
 	@DeleteMapping("/{codigo}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@PreAuthorize("hasAuthority('ROLE_REMOVER_CATEGORIA_DE_MEDICAMENTO')")
+	@PreAuthorize("hasAuthority('ROLE_REMOVER_CATEGORIA_DE_CORRELATO')")
 	public void remover(@PathVariable Long codigo) {
 		categoriaRepository.deleteById(codigo);
 	}
 
 	@PutMapping("/{codigo}")
-	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA_DE_MEDICAMENTO')")
-	public ResponseEntity<Categoria> atualizar(@PathVariable Long codigo, @Validated @RequestBody Categoria categoria) {
-		Categoria categoriaSalva = categoriaService.atualizar(codigo, categoria);
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA_DE_CORRELATO')")
+	public ResponseEntity<CategoriaCorrelato> atualizar(@PathVariable Long codigo, @Validated @RequestBody CategoriaCorrelato categoria) {
+		CategoriaCorrelato categoriaSalva = categoriaService.atualizar(codigo, categoria);
 		return ResponseEntity.ok(categoriaSalva);
 	}
 	
 	@PutMapping("/{codigo}/ativo")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA_DE_MEDICAMENTO')")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA_DE_CORRELATO')")
 	public void atualizarPropriedadeAtivo(@PathVariable Long codigo, @RequestBody Boolean ativo) {
 		categoriaService.atualizarPropriedadeAtivo(codigo, ativo);
 	}

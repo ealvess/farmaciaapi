@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 import com.farmacia.farmaciaapi.model.Paciente;
 import com.farmacia.farmaciaapi.model.Paciente_;
 import com.farmacia.farmaciaapi.repository.filter.PacienteFilter;
+import com.farmacia.farmaciaapi.repository.projection.ResumoPaciente;
 
 public class PacienteRepositoryImpl implements PacienteRepositoryQuery {
 
@@ -37,6 +38,29 @@ public class PacienteRepositoryImpl implements PacienteRepositoryQuery {
 		criteria.where(predicates);
 
 		TypedQuery<Paciente> query = manager.createQuery(criteria);
+		adiconarRestricoesDePaginacao(query, pageable);
+
+		return new PageImpl<>(query.getResultList(), pageable, total(pacienteFilter));
+	}
+	
+	@Override
+	public Page<ResumoPaciente> resumo(PacienteFilter pacienteFilter, Pageable pageable) {
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaQuery<ResumoPaciente> criteria = builder.createQuery(ResumoPaciente.class);
+		Root<Paciente> root = criteria.from(Paciente.class);
+		
+		criteria.select(builder.construct(ResumoPaciente.class, 
+				root.get(Paciente_.codigo),
+				root.get(Paciente_.nome),
+				root.get(Paciente_.cpf),
+				root.get(Paciente_.rg),
+				root.get(Paciente_.dataNascimento),
+				root.get(Paciente_.cartaoSus)));
+		
+		Predicate[] predicates = criarRestricoes(pacienteFilter, builder, root);
+		criteria.where(predicates);
+
+		TypedQuery<ResumoPaciente> query = manager.createQuery(criteria);
 		adiconarRestricoesDePaginacao(query, pageable);
 
 		return new PageImpl<>(query.getResultList(), pageable, total(pacienteFilter));
@@ -61,7 +85,7 @@ public class PacienteRepositoryImpl implements PacienteRepositoryQuery {
 		return predicates.toArray(new Predicate[predicates.size()]);
 	}
 
-	private void adiconarRestricoesDePaginacao(TypedQuery<Paciente> query, Pageable pageable) {
+	private void adiconarRestricoesDePaginacao(TypedQuery<?> query, Pageable pageable) {
 		int paginaAtual = pageable.getPageNumber();
 		int totalDeRegistorsPorPagina = pageable.getPageSize();
 		int primeiroRegistroPorPagina = paginaAtual * totalDeRegistorsPorPagina;
@@ -82,5 +106,9 @@ public class PacienteRepositoryImpl implements PacienteRepositoryQuery {
 
 		return manager.createQuery(criteria).getSingleResult();
 	}
+
+
+
+	
 
 }

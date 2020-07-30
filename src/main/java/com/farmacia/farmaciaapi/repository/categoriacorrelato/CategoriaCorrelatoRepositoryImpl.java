@@ -1,4 +1,4 @@
-package com.farmacia.farmaciaapi.repository.correlato;
+package com.farmacia.farmaciaapi.repository.categoriacorrelato;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,49 +16,45 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
-import com.farmacia.farmaciaapi.model.Correlato;
-import com.farmacia.farmaciaapi.model.Correlato_;
-import com.farmacia.farmaciaapi.repository.filter.CorrelatoFilter;
+import com.farmacia.farmaciaapi.model.CategoriaCorrelato;
+import com.farmacia.farmaciaapi.model.CategoriaCorrelato_;
+import com.farmacia.farmaciaapi.repository.filter.CategoriaCorrelatoFilter;
 
-public class CorrelatoRepositoryImpl implements CorrelatoRepositoryQuery {
+public class CategoriaCorrelatoRepositoryImpl implements CategoriaCorrelatoRepositoryQuery {
 
 	@PersistenceContext
 	private EntityManager manager;
 
 	@Override
-	public Page<Correlato> filtrar(CorrelatoFilter correlatoFilter, Pageable pageable) {
+	public Page<CategoriaCorrelato> filtrar(CategoriaCorrelatoFilter categoriaFilter, Pageable pageable) {
 		// Consegue criar as criterias
 		CriteriaBuilder builder = manager.getCriteriaBuilder();
-		CriteriaQuery<Correlato> criteria = builder.createQuery(Correlato.class);
-		Root<Correlato> root = criteria.from(Correlato.class);
+		CriteriaQuery<CategoriaCorrelato> criteria = builder.createQuery(CategoriaCorrelato.class);
+		Root<CategoriaCorrelato> root = criteria.from(CategoriaCorrelato.class);
 
 		// criar restrições (parametros para a busca)
-		Predicate[] predicates = criarRestricoes(correlatoFilter, builder, root);
+		Predicate[] predicates = criarRestricoes(categoriaFilter, builder, root);
 		criteria.where(predicates);
 
-		TypedQuery<Correlato> query = manager.createQuery(criteria);
+		TypedQuery<CategoriaCorrelato> query = manager.createQuery(criteria);
 		adiconarRestricoesDePaginacao(query, pageable);
 
-		return new PageImpl<>(query.getResultList(), pageable, total(correlatoFilter));
+		return new PageImpl<>(query.getResultList(), pageable, total(categoriaFilter));
 	}
 
-	private Predicate[] criarRestricoes(CorrelatoFilter correlatoFilter, CriteriaBuilder builder, 
-			Root<Correlato> root) {
+	private Predicate[] criarRestricoes(CategoriaCorrelatoFilter categoriaFilter, CriteriaBuilder builder, Root<CategoriaCorrelato> root) {
 
 		List<Predicate> predicates = new ArrayList<>();
 
-		if (!StringUtils.isEmpty(correlatoFilter.getNome())) {
-			predicates.add(builder.like(builder.lower(root.get(Correlato_.nome)),
-					"%" + correlatoFilter.getNome().toLowerCase() + "%"));
-		}
-		if (correlatoFilter.getCodigo() != null) {
-			predicates.add(builder.equal(root.get(Correlato_.codigo), correlatoFilter.getCodigo()));
+		if (!StringUtils.isEmpty(categoriaFilter.getNome())) {
+			predicates.add(builder.like(builder.lower(root.get(CategoriaCorrelato_.nome)),
+					"%" + categoriaFilter.getNome().toLowerCase() + "%"));
 		}
 
 		return predicates.toArray(new Predicate[predicates.size()]);
 	}
 
-	private void adiconarRestricoesDePaginacao(TypedQuery<Correlato> query, Pageable pageable) {
+	private void adiconarRestricoesDePaginacao(TypedQuery<CategoriaCorrelato> query, Pageable pageable) {
 		int paginaAtual = pageable.getPageNumber();
 		int totalDeRegistorsPorPagina = pageable.getPageSize();
 		int primeiroRegistroPorPagina = paginaAtual * totalDeRegistorsPorPagina;
@@ -68,12 +64,12 @@ public class CorrelatoRepositoryImpl implements CorrelatoRepositoryQuery {
 
 	}
 
-	private Long total(CorrelatoFilter correlatoFilter) {
+	private Long total(CategoriaCorrelatoFilter categoriaFilter) {
 		CriteriaBuilder builder = manager.getCriteriaBuilder();
 		CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
-		Root<Correlato> root = criteria.from(Correlato.class);
+		Root<CategoriaCorrelato> root = criteria.from(CategoriaCorrelato.class);
 
-		Predicate[] predicates = criarRestricoes(correlatoFilter, builder, root);
+		Predicate[] predicates = criarRestricoes(categoriaFilter, builder, root);
 		criteria.where(predicates);
 		criteria.select(builder.count(root));
 

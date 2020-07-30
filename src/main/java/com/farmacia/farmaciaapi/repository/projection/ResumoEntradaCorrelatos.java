@@ -3,23 +3,21 @@ package com.farmacia.farmaciaapi.repository.projection;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class ResumoCorrelatos {
+public class ResumoEntradaCorrelatos {
 
 	private Long codigo;
-	private String nomeCorrelato;
-	private String grupoCorrelato;
+	private String correlato;
 	private String apresentacao;
 	private LocalDate dataEntrada;
 	private LocalDate dataValidade;
 	private Integer quantidade;
 	private BigDecimal valorUnitario;
 
-	public ResumoCorrelatos(Long codigo, String nomeCorrelato, String grupoCorrelato, String apresentacao,
-			LocalDate dataEntrada, LocalDate dataValidade, Integer quantidade, BigDecimal valorUnitario) {
+	public ResumoEntradaCorrelatos(Long codigo, String correlato, String apresentacao, LocalDate dataEntrada,
+			LocalDate dataValidade, Integer quantidade, BigDecimal valorUnitario) {
 		super();
 		this.codigo = codigo;
-		this.nomeCorrelato = nomeCorrelato;
-		this.grupoCorrelato = grupoCorrelato;
+		this.correlato = correlato;
 		this.apresentacao = apresentacao;
 		this.dataEntrada = dataEntrada;
 		this.dataValidade = dataValidade;
@@ -35,20 +33,12 @@ public class ResumoCorrelatos {
 		this.codigo = codigo;
 	}
 
-	public String getNomeCorrelato() {
-		return nomeCorrelato;
+	public String getCorrelato() {
+		return correlato;
 	}
 
-	public void setNomeCorrelato(String nomeCorrelato) {
-		this.nomeCorrelato = nomeCorrelato;
-	}
-
-	public String getGrupoCorrelato() {
-		return grupoCorrelato;
-	}
-
-	public void setGrupoCorrelato(String grupoCorrelato) {
-		this.grupoCorrelato = grupoCorrelato;
+	public void setCorrelato(String correlato) {
+		this.correlato = correlato;
 	}
 
 	public String getApresentacao() {

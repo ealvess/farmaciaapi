@@ -5,22 +5,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.farmacia.farmaciaapi.model.GrupoCorrelato;
-import com.farmacia.farmaciaapi.repository.GrupoCorrelatoRepository;
+import com.farmacia.farmaciaapi.model.CategoriaCorrelato;
+import com.farmacia.farmaciaapi.repository.CategoriaCorrelatoRepository;
 
 @Service
 public class GrupoCorrelatoService {
 	@Autowired
-	private GrupoCorrelatoRepository grupoCorrelatoRepository;
+	private CategoriaCorrelatoRepository categoriaCorrelatoRepository;
 
-	public GrupoCorrelato atualizar(Long codigo, GrupoCorrelato grupo) {
+	public CategoriaCorrelato atualizar(Long codigo, CategoriaCorrelato grupo) {
 
-		GrupoCorrelato grupoSalvo = this.grupoCorrelatoRepository.findById(codigo)
+		CategoriaCorrelato grupoSalvo = this.categoriaCorrelatoRepository.findById(codigo)
 				.orElseThrow(() -> new EmptyResultDataAccessException(1));
 
 		BeanUtils.copyProperties(grupo, grupoSalvo, "codigo");
 
-		return this.grupoCorrelatoRepository.save(grupoSalvo);
+		return this.categoriaCorrelatoRepository.save(grupoSalvo);
 	}
 
 }

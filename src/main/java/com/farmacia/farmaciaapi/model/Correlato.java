@@ -1,9 +1,5 @@
 package com.farmacia.farmaciaapi.model;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,11 +7,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 
 @Entity
-@Table(name = "correlato")
+@Table(name = "correlatos")
 public class Correlato {
 
 	@Id
@@ -23,41 +21,21 @@ public class Correlato {
 	private Long codigo;
 
 	@NotNull
+	private String nome;
+
 	@ManyToOne
-	@JoinColumn(name = "codigo_grupo")
-	private GrupoCorrelato codigo_grupo;
+	@JoinColumn(name = "codigo_categoria")
+	private CategoriaCorrelato categoriaCorrelato;
 
 	@NotNull
-	@Column(name = "data_entrada")
-	private LocalDate dataEntrada;
+	private String unidadeDeMedida;
+
+	private Integer quantidadeMinima;
+
+	private String localizacao;
 
 	@NotNull
-	@ManyToOne
-	@JoinColumn(name = "codigo_fornecedor")
-	private Fornecedor fornecedor;
-
-	@NotNull
-	private String numeroNotaFiscal;
-
-	@NotNull
-	private String nomeCorrelato;
-
-	@NotNull
-	private String apresentacao;
-
-	@NotNull
-	@Column(name = "data_fabricacao")
-	private LocalDate dataFabricacao;
-
-	@NotNull
-	@Column(name = "data_validade")
-	private LocalDate dataValidade;
-
-	@NotNull
-	private Integer quantidade;
-
-	@NotNull
-	private BigDecimal valorUnitario;
+	private Boolean ativo;
 
 	public Long getCodigo() {
 		return codigo;
@@ -67,84 +45,58 @@ public class Correlato {
 		this.codigo = codigo;
 	}
 
-	public GrupoCorrelato getCodigo_grupo() {
-		return codigo_grupo;
+	public String getNome() {
+		return nome;
 	}
 
-	public void setCodigo_grupo(GrupoCorrelato codigo_grupo) {
-		this.codigo_grupo = codigo_grupo;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
-	public LocalDate getDataEntrada() {
-		return dataEntrada;
+	public CategoriaCorrelato getCategoriaCorrelato() {
+		return categoriaCorrelato;
 	}
 
-	public void setDataEntrada(LocalDate dataEntrada) {
-		this.dataEntrada = dataEntrada;
+	public void setCategoriaCorrelato(CategoriaCorrelato categoriaCorrelato) {
+		this.categoriaCorrelato = categoriaCorrelato;
 	}
 
-	public Fornecedor getFornecedor() {
-		return fornecedor;
+	public String getUnidadeDeMedida() {
+		return unidadeDeMedida;
 	}
 
-	public void setFornecedor(Fornecedor fornecedor) {
-		this.fornecedor = fornecedor;
+	public void setUnidadeDeMedida(String unidadeDeMedida) {
+		this.unidadeDeMedida = unidadeDeMedida;
 	}
 
-	public String getNumeroNotaFiscal() {
-		return numeroNotaFiscal;
+	public Integer getQuantidadeMinima() {
+		return quantidadeMinima;
 	}
 
-	public void setNumeroNotaFiscal(String numeroNotaFiscal) {
-		this.numeroNotaFiscal = numeroNotaFiscal;
+	public void setQuantidadeMinima(Integer quantidadeMinima) {
+		this.quantidadeMinima = quantidadeMinima;
 	}
 
-	public String getNomeCorrelato() {
-		return nomeCorrelato;
+	public String getLocalizacao() {
+		return localizacao;
 	}
 
-	public void setNomeCorrelato(String nomeCorrelato) {
-		this.nomeCorrelato = nomeCorrelato;
+	public void setLocalizacao(String localizacao) {
+		this.localizacao = localizacao;
 	}
 
-	public String getApresentacao() {
-		return apresentacao;
+	public Boolean getAtivo() {
+		return ativo;
 	}
 
-	public void setApresentacao(String apresentacao) {
-		this.apresentacao = apresentacao;
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
 	}
 
-	public LocalDate getDataFabricacao() {
-		return dataFabricacao;
-	}
-
-	public void setDataFabricacao(LocalDate dataFabricacao) {
-		this.dataFabricacao = dataFabricacao;
-	}
-
-	public LocalDate getDataValidade() {
-		return dataValidade;
-	}
-
-	public void setDataValidade(LocalDate dataValidade) {
-		this.dataValidade = dataValidade;
-	}
-
-	public Integer getQuantidade() {
-		return quantidade;
-	}
-
-	public void setQuantidade(Integer quantidade) {
-		this.quantidade = quantidade;
-	}
-
-	public BigDecimal getValorUnitario() {
-		return valorUnitario;
-	}
-
-	public void setValorUnitario(BigDecimal valorUnitario) {
-		this.valorUnitario = valorUnitario;
+	@JsonIgnore
+	@Transient
+	public boolean isInativo() {
+		return !this.ativo;
 	}
 
 	@Override

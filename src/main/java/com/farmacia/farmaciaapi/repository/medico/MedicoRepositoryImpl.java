@@ -53,9 +53,9 @@ public class MedicoRepositoryImpl implements MedicoRepositoryQuery{
 				root.get(Medico_.codigo),
 				root.get(Medico_.nome),
 				root.get(Medico_.crm),
+				root.get(Medico_.email),
 				root.get(Medico_.telefone),
 				root.get(Medico_.celular),
-				root.get(Medico_.email),
 				root.get(Medico_.ativo)));
 		
 		Predicate[] predicates = criarRestricoes(medicoFilter, builder, root);

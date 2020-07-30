@@ -1,5 +1,7 @@
 package com.farmacia.farmaciaapi.resource;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import com.farmacia.farmaciaapi.event.RecursoCriadoEvent;
 import com.farmacia.farmaciaapi.model.Paciente;
 import com.farmacia.farmaciaapi.repository.PacienteRepository;
 import com.farmacia.farmaciaapi.repository.filter.PacienteFilter;
+import com.farmacia.farmaciaapi.repository.projection.ResumoPaciente;
 import com.farmacia.farmaciaapi.service.PacienteService;
 
 @RestController
@@ -44,12 +47,24 @@ public class PacienteResource {
 	public Page<Paciente> filtrar(PacienteFilter pacienteFilter, Pageable pageable) {
 		return pacienteRepository.filtrar(pacienteFilter, pageable);
 	}
+	
+	@GetMapping(params = "resumo")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PACIENTE')")
+	public Page<ResumoPaciente> resumo(PacienteFilter pacienteFilter, Pageable pageable) {
+		return pacienteRepository.resumo(pacienteFilter, pageable);
+	}
 
 	@GetMapping("/{codigo}")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PACIENTE')")
 	public ResponseEntity<Paciente> buscarPeloCodigo(@PathVariable Long codigo) {
 		return this.pacienteRepository.findById(codigo).map(paciente -> ResponseEntity.ok(paciente))
 				.orElse(ResponseEntity.notFound().build());
+	}
+	
+	@GetMapping("/listar")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PACIENTE')")
+	public List<Paciente> listarTodas(){
+		return pacienteRepository.findAll();
 	}
 
 	@PostMapping

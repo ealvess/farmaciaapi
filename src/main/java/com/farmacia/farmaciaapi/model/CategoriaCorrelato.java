@@ -5,19 +5,24 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 
 @Entity
-@Table(name = "grupo_correlato")
-public class GrupoCorrelato {
-	
+@Table(name = "categorias_correlato")
+public class CategoriaCorrelato {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
-	
+
 	@NotNull
 	private String nome;
+
+	@NotNull
+	private Boolean ativo;
 
 	public Long getCodigo() {
 		return codigo;
@@ -33,6 +38,20 @@ public class GrupoCorrelato {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public Boolean getAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
+	}
+
+	@JsonIgnore
+	@Transient
+	public boolean isInativo() {
+		return !this.ativo;
 	}
 
 	@Override
@@ -51,7 +70,7 @@ public class GrupoCorrelato {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		GrupoCorrelato other = (GrupoCorrelato) obj;
+		CategoriaCorrelato other = (CategoriaCorrelato) obj;
 		if (codigo == null) {
 			if (other.codigo != null)
 				return false;
@@ -59,6 +78,5 @@ public class GrupoCorrelato {
 			return false;
 		return true;
 	}
-	
-	
+
 }

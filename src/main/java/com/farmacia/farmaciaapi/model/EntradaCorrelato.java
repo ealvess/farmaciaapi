@@ -15,31 +15,43 @@ import javax.persistence.Table;
 import com.sun.istack.NotNull;
 
 @Entity
-@Table(name = "saida_correlato")
-public class ItemSaidaCorrelato {
+@Table(name = "entradaCorrelato")
+public class EntradaCorrelato {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
 
-	@ManyToOne
-	@JoinColumn(name = "codigo_centro_de_custo")
-	private CentroDeCusto centroDeCusto;
-
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "codigo_correlato")
-	private EntradaCorrelato entradaCorrelato;
+	private Correlato correlato;
 
 	@NotNull
-	@Column(name = "data_saida")
-	private LocalDate dataSaida;
+	@Column(name = "data_entrada")
+	private LocalDate dataEntrada;
+
+	@NotNull
+	@ManyToOne
+	@JoinColumn(name = "codigo_fornecedor")
+	private Fornecedor fornecedor;
+
+	@NotNull
+	private String numeroNotaFiscal;
+
+	@NotNull
+	@Column(name = "data_fabricacao")
+	private LocalDate dataFabricacao;
+
+	@NotNull
+	@Column(name = "data_validade")
+	private LocalDate dataValidade;
 
 	@NotNull
 	private Integer quantidade;
-	private BigDecimal valorUnitario;
 
-	private BigDecimal total;
+	@NotNull
+	private BigDecimal valorUnitario;
 
 	public Long getCodigo() {
 		return codigo;
@@ -49,28 +61,52 @@ public class ItemSaidaCorrelato {
 		this.codigo = codigo;
 	}
 
-	public CentroDeCusto getCentroDeCusto() {
-		return centroDeCusto;
+	public Correlato getCorrelato() {
+		return correlato;
 	}
 
-	public void setCentroDeCusto(CentroDeCusto centroDeCusto) {
-		this.centroDeCusto = centroDeCusto;
+	public void setCorrelato(Correlato correlato) {
+		this.correlato = correlato;
 	}
 
-	public EntradaCorrelato getCorrelato() {
-		return entradaCorrelato;
+	public LocalDate getDataEntrada() {
+		return dataEntrada;
 	}
 
-	public void setCorrelato(EntradaCorrelato entradaCorrelato) {
-		this.entradaCorrelato = entradaCorrelato;
+	public void setDataEntrada(LocalDate dataEntrada) {
+		this.dataEntrada = dataEntrada;
 	}
 
-	public LocalDate getDataSaida() {
-		return dataSaida;
+	public Fornecedor getFornecedor() {
+		return fornecedor;
 	}
 
-	public void setDataSaida(LocalDate dataSaida) {
-		this.dataSaida = dataSaida;
+	public void setFornecedor(Fornecedor fornecedor) {
+		this.fornecedor = fornecedor;
+	}
+
+	public String getNumeroNotaFiscal() {
+		return numeroNotaFiscal;
+	}
+
+	public void setNumeroNotaFiscal(String numeroNotaFiscal) {
+		this.numeroNotaFiscal = numeroNotaFiscal;
+	}
+
+	public LocalDate getDataFabricacao() {
+		return dataFabricacao;
+	}
+
+	public void setDataFabricacao(LocalDate dataFabricacao) {
+		this.dataFabricacao = dataFabricacao;
+	}
+
+	public LocalDate getDataValidade() {
+		return dataValidade;
+	}
+
+	public void setDataValidade(LocalDate dataValidade) {
+		this.dataValidade = dataValidade;
 	}
 
 	public Integer getQuantidade() {
@@ -89,14 +125,6 @@ public class ItemSaidaCorrelato {
 		this.valorUnitario = valorUnitario;
 	}
 
-	public BigDecimal getTotal() {
-		return total;
-	}
-
-	public void setTotal(BigDecimal total) {
-		this.total = total;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -113,7 +141,7 @@ public class ItemSaidaCorrelato {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ItemSaidaCorrelato other = (ItemSaidaCorrelato) obj;
+		EntradaCorrelato other = (EntradaCorrelato) obj;
 		if (codigo == null) {
 			if (other.codigo != null)
 				return false;

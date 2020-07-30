@@ -25,7 +25,7 @@ import com.farmacia.farmaciaapi.event.RecursoCriadoEvent;
 import com.farmacia.farmaciaapi.model.ItemSaidaCorrelato;
 import com.farmacia.farmaciaapi.repository.ItemSaidaCorrelatoRepository;
 import com.farmacia.farmaciaapi.repository.filter.ItemSaidaCorrelatoFilter;
-import com.farmacia.farmaciaapi.service.CorrelatoService;
+import com.farmacia.farmaciaapi.service.EntradaCorrelatoService;
 
 @RestController
 @RequestMapping("/saidacorrelato")
@@ -35,7 +35,7 @@ public class ItemSaidaCorrelatoResource {
 	private ItemSaidaCorrelatoRepository itemSaidaCorrelatoRespository;
 
 	@Autowired
-	private CorrelatoService correlatoService;
+	private EntradaCorrelatoService entradaCorrelatoService;
 
 	@Autowired
 	private ApplicationEventPublisher publisher;
@@ -74,7 +74,7 @@ public class ItemSaidaCorrelatoResource {
 	@PutMapping("/{codigo}/quantidade")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void atualizarQuantidade(@PathVariable Long codigo, Integer quantidade) {
-		correlatoService.atualizarQuantidade(codigo, quantidade);
+		entradaCorrelatoService.atualizarQuantidade(codigo, quantidade);
 	}
 
 	public BigDecimal calcularValorTotal(Integer quantidade, BigDecimal valorUnitario) {
