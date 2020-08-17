@@ -22,21 +22,21 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.farmacia.farmaciaapi.event.RecursoCriadoEvent;
-import com.farmacia.farmaciaapi.model.ItemSaidaCorrelato;
-import com.farmacia.farmaciaapi.repository.ItemSaidaCorrelatoRepository;
-import com.farmacia.farmaciaapi.repository.filter.ItemSaidaCorrelatoFilter;
-import com.farmacia.farmaciaapi.repository.projection.ResumoSaidaDeCorrelatos;
-import com.farmacia.farmaciaapi.service.EntradaCorrelatoService;
+import com.farmacia.farmaciaapi.model.ItemSaidaMedicamentoPorCentroDeCusto;
+import com.farmacia.farmaciaapi.repository.ItemSaidaMedicamentoPorCentroDeCustoRepository;
+import com.farmacia.farmaciaapi.repository.filter.ItemSaidaMedicamentoPorCentroDeCustoFilter;
+import com.farmacia.farmaciaapi.repository.projection.ResumoSaidaDeMedicamentosPorCentroDeCusto;
+import com.farmacia.farmaciaapi.service.EntradaMedicamentoService;
 
 @RestController
-@RequestMapping("/saidacorrelato")
-public class ItemSaidaCorrelatoResource {
+@RequestMapping("/saidamedicamentoscentrodecusto")
+public class ItemSaidaMedicamentoPorCentroDeCustoResource {
 
 	@Autowired
-	private ItemSaidaCorrelatoRepository itemSaidaCorrelatoRespository;
+	private ItemSaidaMedicamentoPorCentroDeCustoRepository itemSaidaMedicamentoRepository;
 
 	@Autowired
-	private EntradaCorrelatoService entradaCorrelatoService;
+	private EntradaMedicamentoService entradaMedicamentoService;
 
 	@Autowired
 	private ApplicationEventPublisher publisher;
@@ -44,26 +44,27 @@ public class ItemSaidaCorrelatoResource {
 	private BigDecimal valorTotal;
 
 	@GetMapping
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ITEM_SAIDA_CORRELATO')")
-	public Page<ItemSaidaCorrelato> pesquisar(ItemSaidaCorrelatoFilter itemSaidaCorrelatoFilter, Pageable pageable) {
-		return itemSaidaCorrelatoRespository.filtrar(itemSaidaCorrelatoFilter, pageable);
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ITEM_SAIDA_MEDICAMENTO')")
+	public Page<ItemSaidaMedicamentoPorCentroDeCusto> pesquisar(ItemSaidaMedicamentoPorCentroDeCustoFilter itemSaidaMedicamentoFilter,
+			Pageable pageable) {
+		return itemSaidaMedicamentoRepository.filtrar(itemSaidaMedicamentoFilter, pageable);
 	}
 	
 	@GetMapping(params = "resumo")
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ITEM_SAIDA_CORRELATO')")
-	public Page<ResumoSaidaDeCorrelatos> resumo(ItemSaidaCorrelatoFilter itemSaidaCorrelatoFilter, 
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ITEM_SAIDA_MEDICAMENTO')")
+	public Page<ResumoSaidaDeMedicamentosPorCentroDeCusto> resumo(ItemSaidaMedicamentoPorCentroDeCustoFilter itemSaidaMedicamentoFilter, 
 			Pageable pageable) {
-		return itemSaidaCorrelatoRespository.resumo(itemSaidaCorrelatoFilter, pageable);
+		return itemSaidaMedicamentoRepository.resumo(itemSaidaMedicamentoFilter, pageable);
 	}
 
 	@PostMapping
-	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_ITEM_SAIDA_CORRELATO')")
-	public ResponseEntity<ItemSaidaCorrelato> criar(@Validated @RequestBody ItemSaidaCorrelato itemSaidaCorrelato,
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_ITEM_SAIDA_MEDICAMENTO')")
+	public ResponseEntity<ItemSaidaMedicamentoPorCentroDeCusto> criar(@Validated @RequestBody ItemSaidaMedicamentoPorCentroDeCusto itemSaidaMedicamento,
 			HttpServletResponse response) {
-		ItemSaidaCorrelato itemSaida = itemSaidaCorrelatoRespository.save(itemSaidaCorrelato);
+		ItemSaidaMedicamentoPorCentroDeCusto itemSaida = itemSaidaMedicamentoRepository.save(itemSaidaMedicamento);
 
 		valorTotal = calcularValorTotal(itemSaida.getQuantidade(), itemSaida.getValorUnitario());
-		atualizarQuantidade(itemSaida.getEntradaCorrelato().getCodigo(), itemSaida.getQuantidade());
+		atualizarQuantidade(itemSaida.getEntradaMedicamento().getCodigo(), itemSaida.getQuantidade());
 
 		itemSaida.setTotal(valorTotal);
 
@@ -73,16 +74,16 @@ public class ItemSaidaCorrelatoResource {
 	}
 
 	@GetMapping("/{codigo}")
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ITEM_SAIDA_CORRELATO')")
-	public ResponseEntity<ItemSaidaCorrelato> buscarPeloCodigo(@PathVariable Long codigo) {
-		return this.itemSaidaCorrelatoRespository.findById(codigo).map(itemSaida -> ResponseEntity.ok(itemSaida))
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ITEM_SAIDA_MEDICAMENTO')")
+	public ResponseEntity<ItemSaidaMedicamentoPorCentroDeCusto> buscarPeloCodigo(@PathVariable Long codigo) {
+		return this.itemSaidaMedicamentoRepository.findById(codigo).map(itemSaida -> ResponseEntity.ok(itemSaida))
 				.orElse(ResponseEntity.notFound().build());
 	}
 
 	@PutMapping("/{codigo}/quantidade")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void atualizarQuantidade(@PathVariable Long codigo, Integer quantidade) {
-		entradaCorrelatoService.atualizarQuantidade(codigo, quantidade);
+		entradaMedicamentoService.atualizarQuantidade(codigo, quantidade);
 	}
 
 	public BigDecimal calcularValorTotal(Integer quantidade, BigDecimal valorUnitario) {

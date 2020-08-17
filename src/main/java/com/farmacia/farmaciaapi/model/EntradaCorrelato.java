@@ -48,6 +48,9 @@ public class EntradaCorrelato {
 	private LocalDate dataValidade;
 
 	@NotNull
+	private String lote;
+
+	@NotNull
 	private Integer quantidade;
 
 	@NotNull
@@ -107,6 +110,14 @@ public class EntradaCorrelato {
 
 	public void setDataValidade(LocalDate dataValidade) {
 		this.dataValidade = dataValidade;
+	}
+
+	public String getLote() {
+		return lote;
+	}
+
+	public void setLote(String lote) {
+		this.lote = lote;
 	}
 
 	public Integer getQuantidade() {

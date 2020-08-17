@@ -26,10 +26,6 @@ public class ItemSaidaMedicamento {
 	@JoinColumn(name = "codigo_paciente")
 	private Paciente paciente;
 
-	@ManyToOne
-	@JoinColumn(name = "codigo_centro_de_custo")
-	private CentroDeCusto centroDeCusto;
-
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "codigo_entrada_medicamento")
@@ -61,19 +57,11 @@ public class ItemSaidaMedicamento {
 		this.paciente = paciente;
 	}
 
-	public CentroDeCusto getCentroDeCusto() {
-		return centroDeCusto;
-	}
-
-	public void setCentroDeCusto(CentroDeCusto centroDeCusto) {
-		this.centroDeCusto = centroDeCusto;
-	}
-
-	public EntradaMedicamento getMedicamento() {
+	public EntradaMedicamento getEntradaMedicamento() {
 		return entradaMedicamento;
 	}
 
-	public void setMedicamento(EntradaMedicamento entradaMedicamento) {
+	public void setEntradaMedicamento(EntradaMedicamento entradaMedicamento) {
 		this.entradaMedicamento = entradaMedicamento;
 	}
 

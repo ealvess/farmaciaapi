@@ -15,8 +15,8 @@ import javax.persistence.Table;
 import com.sun.istack.NotNull;
 
 @Entity
-@Table(name = "saida_correlato")
-public class ItemSaidaCorrelato {
+@Table(name = "saida_medicamento_por_centro_de_custo")
+public class ItemSaidaMedicamentoPorCentroDeCusto {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,12 +24,12 @@ public class ItemSaidaCorrelato {
 
 	@ManyToOne
 	@JoinColumn(name = "codigo_centro_de_custo")
-	private CentroDeCusto centroDeCusto;
+	private CentroDeCusto centrodeCusto;
 
 	@NotNull
 	@ManyToOne
-	@JoinColumn(name = "codigo_entrada_correlato")
-	private EntradaCorrelato entradaCorrelato;
+	@JoinColumn(name = "codigo_entrada_medicamento")
+	private EntradaMedicamento entradaMedicamento;
 
 	@NotNull
 	@Column(name = "data_saida")
@@ -49,20 +49,20 @@ public class ItemSaidaCorrelato {
 		this.codigo = codigo;
 	}
 
-	public CentroDeCusto getCentroDeCusto() {
-		return centroDeCusto;
+	public CentroDeCusto getCentrodeCusto() {
+		return centrodeCusto;
 	}
 
-	public void setCentroDeCusto(CentroDeCusto centroDeCusto) {
-		this.centroDeCusto = centroDeCusto;
+	public void setCentrodeCusto(CentroDeCusto centrodeCusto) {
+		this.centrodeCusto = centrodeCusto;
 	}
 
-	public EntradaCorrelato getEntradaCorrelato() {
-		return entradaCorrelato;
+	public EntradaMedicamento getEntradaMedicamento() {
+		return entradaMedicamento;
 	}
 
-	public void setEntradaCorrelato(EntradaCorrelato entradaCorrelato) {
-		this.entradaCorrelato = entradaCorrelato;
+	public void setEntradaMedicamento(EntradaMedicamento entradaMedicamento) {
+		this.entradaMedicamento = entradaMedicamento;
 	}
 
 	public LocalDate getDataSaida() {
@@ -113,7 +113,7 @@ public class ItemSaidaCorrelato {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ItemSaidaCorrelato other = (ItemSaidaCorrelato) obj;
+		ItemSaidaMedicamentoPorCentroDeCusto other = (ItemSaidaMedicamentoPorCentroDeCusto) obj;
 		if (codigo == null) {
 			if (other.codigo != null)
 				return false;

@@ -25,6 +25,7 @@ import com.farmacia.farmaciaapi.event.RecursoCriadoEvent;
 import com.farmacia.farmaciaapi.model.ItemSaidaMedicamento;
 import com.farmacia.farmaciaapi.repository.ItemSaidaMedicamentoRepository;
 import com.farmacia.farmaciaapi.repository.filter.ItemSaidaMedicamentoFilter;
+import com.farmacia.farmaciaapi.repository.projection.ResumoSaidaDeMedicamentos;
 import com.farmacia.farmaciaapi.service.EntradaMedicamentoService;
 
 @RestController
@@ -48,6 +49,13 @@ public class ItemSaidaMedicamentoResource {
 			Pageable pageable) {
 		return itemSaidaMedicamentoRepository.filtrar(itemSaidaMedicamentoFilter, pageable);
 	}
+	
+	@GetMapping(params = "resumo")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ITEM_SAIDA_MEDICAMENTO')")
+	public Page<ResumoSaidaDeMedicamentos> resumo(ItemSaidaMedicamentoFilter itemSaidaMedicamentoFilter, 
+			Pageable pageable) {
+		return itemSaidaMedicamentoRepository.resumo(itemSaidaMedicamentoFilter, pageable);
+	}
 
 	@PostMapping
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_ITEM_SAIDA_MEDICAMENTO')")
@@ -56,7 +64,7 @@ public class ItemSaidaMedicamentoResource {
 		ItemSaidaMedicamento itemSaida = itemSaidaMedicamentoRepository.save(itemSaidaMedicamento);
 
 		valorTotal = calcularValorTotal(itemSaida.getQuantidade(), itemSaida.getValorUnitario());
-		atualizarQuantidade(itemSaida.getMedicamento().getCodigo(), itemSaida.getQuantidade());
+		atualizarQuantidade(itemSaida.getEntradaMedicamento().getCodigo(), itemSaida.getQuantidade());
 
 		itemSaida.setTotal(valorTotal);
 

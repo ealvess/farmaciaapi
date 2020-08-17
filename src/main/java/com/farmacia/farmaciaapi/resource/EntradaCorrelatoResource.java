@@ -52,7 +52,7 @@ public class EntradaCorrelatoResource {
 	private MessageSource messageSource;
 
 	@GetMapping
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR__ENTRADA_DE_CORRELATO')")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ENTRADA_DE_CORRELATO')")
 	public Page<EntradaCorrelato> pesquisar(EntradaCorrelatoFilter entradaCorrelatoFilter, Pageable pageable) {
 		return entradaCorrelatoRepositrory.filtrar(entradaCorrelatoFilter, pageable);
 	}
@@ -61,6 +61,12 @@ public class EntradaCorrelatoResource {
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ENTRADA_DE_CORRELATO')")
 	public Page<ResumoEntradaCorrelatos> resumo(EntradaCorrelatoFilter entradaCorrelatoFilter, Pageable pageable) {
 		return entradaCorrelatoRepositrory.resumo(entradaCorrelatoFilter, pageable);
+	}
+	
+	@GetMapping("/listar")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ENTRADA_DE_CORRELATO')")
+	public List<EntradaCorrelato> listarTodas(){
+		return entradaCorrelatoRepositrory.findAll();
 	}
 
 	@GetMapping("/{codigo}")

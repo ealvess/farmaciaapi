@@ -16,11 +16,24 @@ public class CentroDeCustoService {
 
 	public CentroDeCusto atualizar(Long codigo, CentroDeCusto centroDeCusto) {
 
-		CentroDeCusto centroDeCustoSalvo = this.centroDeCustoRepository.findById(codigo)
-				.orElseThrow(() -> new EmptyResultDataAccessException(1));
+		CentroDeCusto centroDeCustoSalvo = buscarCentroDeCusto(codigo);
 
 		BeanUtils.copyProperties(centroDeCusto, centroDeCustoSalvo, "codigo");
 
 		return this.centroDeCustoRepository.save(centroDeCustoSalvo);
 	}
+	
+	public void atualizarPropriedadeAtivo(Long codigo, Boolean ativo) {
+		CentroDeCusto centroDeCustoSalvo = buscarCentroDeCusto(codigo);
+		centroDeCustoSalvo.setAtivo(ativo);
+		centroDeCustoRepository.save(centroDeCustoSalvo);
+		
+	}
+
+	public CentroDeCusto buscarCentroDeCusto(Long codigo) {
+		CentroDeCusto centroDeCustoSalvo = this.centroDeCustoRepository.findById(codigo)
+				.orElseThrow(() -> new EmptyResultDataAccessException(1));
+		return centroDeCustoSalvo;
+	}
+
 }

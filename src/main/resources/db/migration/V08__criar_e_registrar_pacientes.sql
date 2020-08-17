@@ -1,16 +1,16 @@
 CREATE TABLE paciente(
 	codigo BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
-	nome VARCHAR(70) NOT NULL,
-	cpf VARCHAR(11),
-	rg VARCHAR(11),
+	nome VARCHAR(100) NOT NULL,
+	cpf VARCHAR(14),
+	rg VARCHAR(14),
 	data_nascimento DATE NOT NULL,
 	sexo VARCHAR(1),
 	cartao_sus VARCHAR(15) NOT NULL,
-	logradouro VARCHAR(30),
+	logradouro VARCHAR(50),
 	numero VARCHAR(30),
 	complemento VARCHAR(30),
 	bairro VARCHAR(30),
-	cep VARCHAR(30),
+	cep VARCHAR(9),
 	cidade VARCHAR(30),
 	estado VARCHAR(30)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;

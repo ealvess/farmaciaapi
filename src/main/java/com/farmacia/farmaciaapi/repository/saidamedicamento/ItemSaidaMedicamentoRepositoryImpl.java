@@ -14,10 +14,15 @@ import javax.persistence.criteria.Root;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.StringUtils;
 
+import com.farmacia.farmaciaapi.model.EntradaMedicamento_;
 import com.farmacia.farmaciaapi.model.ItemSaidaMedicamento;
 import com.farmacia.farmaciaapi.model.ItemSaidaMedicamento_;
+import com.farmacia.farmaciaapi.model.Medicamento_;
+import com.farmacia.farmaciaapi.model.Paciente_;
 import com.farmacia.farmaciaapi.repository.filter.ItemSaidaMedicamentoFilter;
+import com.farmacia.farmaciaapi.repository.projection.ResumoSaidaDeMedicamentos;
 
 public class ItemSaidaMedicamentoRepositoryImpl implements ItemSaidaMedicamentoRepositoryQuery {
 
@@ -40,12 +45,39 @@ public class ItemSaidaMedicamentoRepositoryImpl implements ItemSaidaMedicamentoR
 
 		return new PageImpl<>(query.getResultList(), pageable, total(itemSaidaMedicamentoFilter));
 	}
+	
+	@Override
+	public Page<ResumoSaidaDeMedicamentos> resumo(ItemSaidaMedicamentoFilter itemSaidaMedicamentoFilter, Pageable pageable) {
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaQuery<ResumoSaidaDeMedicamentos> criteria = builder.createQuery(ResumoSaidaDeMedicamentos.class);
+		Root<ItemSaidaMedicamento> root = criteria.from(ItemSaidaMedicamento.class);
+		
+		criteria.select(builder.construct(ResumoSaidaDeMedicamentos.class, 
+				root.get(ItemSaidaMedicamento_.codigo),
+				root.get(ItemSaidaMedicamento_.paciente).get(Paciente_.nome),
+				root.get(ItemSaidaMedicamento_.entradaMedicamento).get(EntradaMedicamento_.medicamento).get(Medicamento_.nome),
+				root.get(ItemSaidaMedicamento_.dataSaida),
+				root.get(ItemSaidaMedicamento_.quantidade),
+				root.get(ItemSaidaMedicamento_.valorUnitario)));
+		
+		Predicate[] predicates = criarRestricoes(itemSaidaMedicamentoFilter, builder, root);
+		criteria.where(predicates);
+
+		TypedQuery<ResumoSaidaDeMedicamentos> query = manager.createQuery(criteria);
+		adiconarRestricoesDePaginacao(query, pageable);
+
+		return new PageImpl<>(query.getResultList(), pageable, total(itemSaidaMedicamentoFilter));
+	}
 
 	private Predicate[] criarRestricoes(ItemSaidaMedicamentoFilter itemSaidaMedicamentoFilter, CriteriaBuilder builder,
 			Root<ItemSaidaMedicamento> root) {
 
 		List<Predicate> predicates = new ArrayList<>();
-
+		
+		if (!StringUtils.isEmpty(itemSaidaMedicamentoFilter.getNomepaciente())) {
+			predicates.add(builder.like(builder.lower(root.get(ItemSaidaMedicamento_.paciente).get(Paciente_.nome)),
+					"%" + itemSaidaMedicamentoFilter.getNomepaciente().toLowerCase() + "%"));
+		}
 		if (itemSaidaMedicamentoFilter.getDataSaidaDe() != null) {
 			predicates.add(builder.greaterThanOrEqualTo(root.get(ItemSaidaMedicamento_.dataSaida),
 					itemSaidaMedicamentoFilter.getDataSaidaDe()));
@@ -60,7 +92,7 @@ public class ItemSaidaMedicamentoRepositoryImpl implements ItemSaidaMedicamentoR
 		return predicates.toArray(new Predicate[predicates.size()]);
 	}
 
-	private void adiconarRestricoesDePaginacao(TypedQuery<ItemSaidaMedicamento> query, Pageable pageable) {
+	private void adiconarRestricoesDePaginacao(TypedQuery<?> query, Pageable pageable) {
 		int paginaAtual = pageable.getPageNumber();
 		int totalDeRegistorsPorPagina = pageable.getPageSize();
 		int primeiroRegistroPorPagina = paginaAtual * totalDeRegistorsPorPagina;

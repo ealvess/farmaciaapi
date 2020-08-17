@@ -4,10 +4,10 @@ import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-public class ItemSaidaCorrelatoFilter {
+public class ItemSaidaMedicamentoPorCentroDeCustoFilter {
 
-	private String nomecorrelato;
-	private String centrodecusto;
+	private String centroDeCusto;
+	private String nomemedicamento;
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dataSaidaDe;
@@ -15,20 +15,20 @@ public class ItemSaidaCorrelatoFilter {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dataSaidaAte;
 
-	public String getNomecorrelato() {
-		return nomecorrelato;
+	public String getCentroDeCusto() {
+		return centroDeCusto;
 	}
 
-	public void setNomecorrelato(String nomecorrelato) {
-		this.nomecorrelato = nomecorrelato;
+	public void setCentroDeCusto(String centroDeCusto) {
+		this.centroDeCusto = centroDeCusto;
 	}
 
-	public String getCentrodecusto() {
-		return centrodecusto;
+	public String getNomemedicamento() {
+		return nomemedicamento;
 	}
 
-	public void setCentrodecusto(String centrodecusto) {
-		this.centrodecusto = centrodecusto;
+	public void setNomemedicamento(String nomemedicamento) {
+		this.nomemedicamento = nomemedicamento;
 	}
 
 	public LocalDate getDataSaidaDe() {

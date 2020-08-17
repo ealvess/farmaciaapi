@@ -20,7 +20,7 @@ CREATE TABLE usuario_permissao (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO usuario (codigo, nome, email, senha, tipo) values (1, 'Administrador', 'admin@gmail.com', '$2a$10$X607ZPhQ4EgGNaYKt3n4SONjIv9zc.VMWdEuhCuba7oLAL5IvcL5.', 'Farmacêutico');
-INSERT INTO usuario (codigo, nome, email, senha, tipo) values (2, 'Pedro Silva', 'pedro@gmail.com', '$2a$10$Zc3w6HyuPOPXamaMhh.PQOXvDnEsadztbfi6/RyZWJDzimE8WQjaq', 'Atendente');
+INSERT INTO usuario (codigo, nome, email, senha, tipo) values (2, 'Pedro Silva', 'pedro@gmail.com', '$2y$12$koo2eLpxgttzQP.X.IzMNOq8rPxr2LyBEkMx/UPZfZdBMpebvlAKe', 'Atendente');
 
 INSERT INTO permissao (codigo, descricao) values (1, 'ROLE_CADASTRAR_CATEGORIA_DE_MEDICAMENTO');
 INSERT INTO permissao (codigo, descricao) values (2, 'ROLE_REMOVER_CATEGORIA_DE_MEDICAMENTO');

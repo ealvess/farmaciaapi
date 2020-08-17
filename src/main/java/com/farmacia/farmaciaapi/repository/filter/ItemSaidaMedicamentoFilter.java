@@ -6,7 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 public class ItemSaidaMedicamentoFilter {
 
-	private String nome;
+	private String nomepaciente;
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dataSaidaDe;
@@ -14,12 +14,12 @@ public class ItemSaidaMedicamentoFilter {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dataSaidaAte;
 
-	public String getNome() {
-		return nome;
+	public String getNomepaciente() {
+		return nomepaciente;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setNomepaciente(String nomepaciente) {
+		this.nomepaciente = nomepaciente;
 	}
 
 	public LocalDate getDataSaidaDe() {

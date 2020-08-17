@@ -52,19 +52,25 @@ public class EntradaMedicamentoResource {
 	private MessageSource messageSource;
 
 	@GetMapping
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_MEDICAMENTO')")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ENTRADA_DE_MEDICAMENTO')")
 	public Page<EntradaMedicamento> pesquisar(EntradaMedicamentoFilter entradaMedicamentoFilter, Pageable pageable) {
 		return entradaMedicamentoRepository.filtrar(entradaMedicamentoFilter, pageable);
 	}
 	
 	@GetMapping(params = "resumo")
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_MEDICAMENTO')")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ENTRADA_DE_MEDICAMENTO')")
 	public Page<ResumoEntradaMedicamento> resumo(EntradaMedicamentoFilter entradaMedicamentoFilter, Pageable pageable) {
 		return entradaMedicamentoRepository.resumo(entradaMedicamentoFilter, pageable);
 	}
+	
+	@GetMapping("/listar")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR__ENTRADA_DE_MEDICAMENTO')")
+	public List<EntradaMedicamento> listarTodas(){
+		return entradaMedicamentoRepository.findAll();
+	}
 
 	@PostMapping
-	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_MEDICAMENTO')")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_ENTRADA_DE_MEDICAMENTO')")
 	public ResponseEntity<EntradaMedicamento> criar(@Validated @RequestBody EntradaMedicamento entradaMedicamento,
 			HttpServletResponse response) {
 		EntradaMedicamento medicamentoSalvo = entradaMedicamentoService.salvar(entradaMedicamento);
@@ -75,7 +81,7 @@ public class EntradaMedicamentoResource {
 	}
 
 	@GetMapping("/{codigo}")
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_MEDICAMENTO')")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ENTRADA_DE_MEDICAMENTO')")
 	public ResponseEntity<EntradaMedicamento> buscarPeloCodigo(@PathVariable Long codigo) {
 		return this.entradaMedicamentoRepository.findById(codigo).map(medicamento -> ResponseEntity.ok(medicamento))
 				.orElse(ResponseEntity.notFound().build());
@@ -83,13 +89,13 @@ public class EntradaMedicamentoResource {
 
 	@DeleteMapping("/{codigo}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@PreAuthorize("hasAuthority('ROLE_REMOVER_MEDICAMENTO')")
+	@PreAuthorize("hasAuthority('ROLE_REMOVER_ENTRADA_DE_MEDICAMENTO')")
 	public void remover(@PathVariable Long codigo) {
 		entradaMedicamentoRepository.deleteById(codigo);
 	}
 
 	@PutMapping("/{codigo}")
-	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_MEDICAMENTO')")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_ENTRADA_DE_MEDICAMENTO')")
 	public ResponseEntity<EntradaMedicamento> atualizar(@PathVariable Long codigo,
 			@Validated @RequestBody EntradaMedicamento entradaMedicamento) {
 		EntradaMedicamento medicamentoSalvo = entradaMedicamentoService.atualizar(codigo, entradaMedicamento);
