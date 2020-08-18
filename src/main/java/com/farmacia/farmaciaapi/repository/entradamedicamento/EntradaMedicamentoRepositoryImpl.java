@@ -1,5 +1,6 @@
 package com.farmacia.farmaciaapi.repository.entradamedicamento;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
+import com.farmacia.farmaciaapi.dto.EstatisticaEntradaMedicamento;
 import com.farmacia.farmaciaapi.model.EntradaMedicamento;
 import com.farmacia.farmaciaapi.model.EntradaMedicamento_;
 import com.farmacia.farmaciaapi.model.Medicamento_;
@@ -26,6 +28,34 @@ public class EntradaMedicamentoRepositoryImpl implements EntradaMedicamentoRepos
 
 	@PersistenceContext
 	private EntityManager manager;
+	
+	
+	@Override
+	public List<EstatisticaEntradaMedicamento> porMedicamento(LocalDate mesReferencia) {
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaQuery<EstatisticaEntradaMedicamento> criteria = builder.createQuery(EstatisticaEntradaMedicamento.class);
+		Root<EntradaMedicamento> root = criteria.from(EntradaMedicamento.class);
+		
+		criteria.select(builder.construct(EstatisticaEntradaMedicamento.class, 
+				root.get(EntradaMedicamento_.medicamento).get(Medicamento_.nome),
+				builder.sum(root.get(EntradaMedicamento_.quantidade))));
+		
+		LocalDate primeiroDia = mesReferencia.withDayOfMonth(1);
+		LocalDate ultimoDia = mesReferencia.withDayOfMonth(mesReferencia.lengthOfMonth());
+		
+		criteria.where(
+				builder.greaterThanOrEqualTo(root.get(EntradaMedicamento_.validade), 
+						primeiroDia),
+				builder.lessThanOrEqualTo(root.get(EntradaMedicamento_.validade), 
+						ultimoDia));
+		
+		criteria.groupBy(root.get(EntradaMedicamento_.medicamento).get(Medicamento_.nome));
+		
+		TypedQuery<EstatisticaEntradaMedicamento> typedQuery = manager
+				.createQuery(criteria);
+		
+		return typedQuery.getResultList();
+	}
 
 	@Override
 	public Page<EntradaMedicamento> filtrar(EntradaMedicamentoFilter entradaMedicamentoFilter, Pageable pageable) {
