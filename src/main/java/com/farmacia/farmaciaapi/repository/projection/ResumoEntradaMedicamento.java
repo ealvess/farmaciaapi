@@ -10,11 +10,11 @@ public class ResumoEntradaMedicamento {
 	private String apresentacao;
 	private LocalDate dataEntrada;
 	private LocalDate dataValidade;
-	private Integer quantidade;
+	private BigDecimal quantidade;
 	private BigDecimal valorUnitario;
 
 	public ResumoEntradaMedicamento(Long codigo, String medicamento, String apresentacao, LocalDate dataEntrada,
-			LocalDate dataValidade, Integer quantidade, BigDecimal valorUnitario) {
+			LocalDate dataValidade, BigDecimal quantidade, BigDecimal valorUnitario) {
 		this.codigo = codigo;
 		this.medicamento = medicamento;
 		this.apresentacao = apresentacao;
@@ -64,11 +64,11 @@ public class ResumoEntradaMedicamento {
 		this.dataValidade = dataValidade;
 	}
 
-	public Integer getQuantidade() {
+	public BigDecimal getQuantidade() {
 		return quantidade;
 	}
 
-	public void setQuantidade(Integer quantidade) {
+	public void setQuantidade(BigDecimal quantidade) {
 		this.quantidade = quantidade;
 	}
 
