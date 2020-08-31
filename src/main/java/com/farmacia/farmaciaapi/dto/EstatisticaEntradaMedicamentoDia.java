@@ -3,28 +3,28 @@ package com.farmacia.farmaciaapi.dto;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import com.farmacia.farmaciaapi.model.EntradaMedicamento;
+import com.farmacia.farmaciaapi.model.Medicamento;
 
 public class EstatisticaEntradaMedicamentoDia {
 
-	private EntradaMedicamento entradaMedicamento;
+	private Medicamento medicamento;
 
 	private LocalDate dia;
 
-	private BigDecimal total;
+	private BigDecimal quantidade;
 
-	public EstatisticaEntradaMedicamentoDia(EntradaMedicamento entradaMedicamento, LocalDate dia, BigDecimal total) {
-		this.entradaMedicamento = entradaMedicamento;
-		this.dia = dia;
-		this.total = total;
+	public EstatisticaEntradaMedicamentoDia(Medicamento medicamento,  LocalDate dia, BigDecimal quantidade) {
+		this.medicamento = medicamento ;
+		this.dia =  (LocalDate) dia;
+		this.quantidade = (BigDecimal) quantidade;
 	}
 
-	public EntradaMedicamento getEntradaMedicamento() {
-		return entradaMedicamento;
+	public Medicamento getMedicamento() {
+		return medicamento;
 	}
 
-	public void setEntradaMedicamento(EntradaMedicamento entradaMedicamento) {
-		this.entradaMedicamento = entradaMedicamento;
+	public void setMedicamento(Medicamento medicamento) {
+		this.medicamento = medicamento;
 	}
 
 	public LocalDate getDia() {
@@ -35,12 +35,12 @@ public class EstatisticaEntradaMedicamentoDia {
 		this.dia = dia;
 	}
 
-	public BigDecimal getTotal() {
-		return total;
+	public BigDecimal getQuantidade() {
+		return quantidade;
 	}
 
-	public void setTotal(BigDecimal total) {
-		this.total = total;
+	public void setQuantidade(BigDecimal quantidade) {
+		this.quantidade = quantidade;
 	}
 
 }

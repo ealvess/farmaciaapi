@@ -51,7 +51,7 @@ public class EntradaMedicamento {
 	private String lote;
 
 	@NotNull
-	private Integer quantidade;
+	private BigDecimal quantidade;
 
 	@NotNull
 	private BigDecimal valorUnitario;
@@ -120,11 +120,11 @@ public class EntradaMedicamento {
 		this.lote = lote;
 	}
 
-	public Integer getQuantidade() {
+	public BigDecimal getQuantidade() {
 		return quantidade;
 	}
 
-	public void setQuantidade(Integer quantidade) {
+	public void setQuantidade(BigDecimal quantidade) {
 		this.quantidade = quantidade;
 	}
 

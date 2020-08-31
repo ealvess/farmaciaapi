@@ -36,7 +36,7 @@ public class ItemSaidaMedicamentoPorCentroDeCusto {
 	private LocalDate dataSaida;
 
 	@NotNull
-	private Integer quantidade;
+	private BigDecimal quantidade;
 	private BigDecimal valorUnitario;
 
 	private BigDecimal total;
@@ -73,11 +73,11 @@ public class ItemSaidaMedicamentoPorCentroDeCusto {
 		this.dataSaida = dataSaida;
 	}
 
-	public Integer getQuantidade() {
+	public BigDecimal getQuantidade() {
 		return quantidade;
 	}
 
-	public void setQuantidade(Integer quantidade) {
+	public void setQuantidade(BigDecimal quantidade) {
 		this.quantidade = quantidade;
 	}
 

@@ -1,6 +1,7 @@
 package com.farmacia.farmaciaapi.resource;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,6 +30,7 @@ import com.farmacia.farmaciaapi.repository.ItemSaidaMedicamentoRepository;
 import com.farmacia.farmaciaapi.repository.filter.ItemSaidaMedicamentoFilter;
 import com.farmacia.farmaciaapi.repository.projection.ResumoSaidaDeMedicamentos;
 import com.farmacia.farmaciaapi.service.EntradaMedicamentoService;
+import com.farmacia.farmaciaapi.service.SaidaDeMedicamentoService;
 
 @RestController
 @RequestMapping("/saidamedicamentos")
@@ -37,11 +41,26 @@ public class ItemSaidaMedicamentoResource {
 
 	@Autowired
 	private EntradaMedicamentoService entradaMedicamentoService;
+	
+	@Autowired
+	private SaidaDeMedicamentoService saidaDeMedicamentoPorPacienteService;
 
 	@Autowired
 	private ApplicationEventPublisher publisher;
 
 	private BigDecimal valorTotal;
+	
+	@GetMapping("/relatorios/por-paciente")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ITEM_SAIDA_MEDICAMENTO')")
+	public ResponseEntity<byte[]> relatorioPorPpaciente(
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate inicio, 
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fim) throws Exception {
+		byte[] relatorio = saidaDeMedicamentoPorPacienteService.relatorioPorPessoa(inicio, fim);
+		
+		return ResponseEntity.ok()
+				.header(org.springframework.http.HttpHeaders.CONTENT_TYPE, org.springframework.http.MediaType.APPLICATION_PDF_VALUE)
+				.body(relatorio);
+	}
 
 	@GetMapping
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ITEM_SAIDA_MEDICAMENTO')")
@@ -82,11 +101,11 @@ public class ItemSaidaMedicamentoResource {
 
 	@PutMapping("/{codigo}/quantidade")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void atualizarQuantidade(@PathVariable Long codigo, Integer quantidade) {
+	public void atualizarQuantidade(@PathVariable Long codigo, BigDecimal quantidade) {
 		entradaMedicamentoService.atualizarQuantidade(codigo, quantidade);
 	}
 
-	public BigDecimal calcularValorTotal(Integer quantidade, BigDecimal valorUnitario) {
+	public BigDecimal calcularValorTotal(BigDecimal quantidade, BigDecimal valorUnitario) {
 		int qtd = quantidade.intValue();
 		BigDecimal temp = new BigDecimal(qtd);
 

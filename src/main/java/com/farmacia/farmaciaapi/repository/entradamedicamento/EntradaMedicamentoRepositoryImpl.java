@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
 import com.farmacia.farmaciaapi.dto.EstatisticaEntradaMedicamento;
+import com.farmacia.farmaciaapi.dto.EstatisticaEntradaMedicamentoDia;
 import com.farmacia.farmaciaapi.model.EntradaMedicamento;
 import com.farmacia.farmaciaapi.model.EntradaMedicamento_;
 import com.farmacia.farmaciaapi.model.Medicamento_;
@@ -28,32 +29,59 @@ public class EntradaMedicamentoRepositoryImpl implements EntradaMedicamentoRepos
 
 	@PersistenceContext
 	private EntityManager manager;
-	
-	
+
 	@Override
-	public List<EstatisticaEntradaMedicamento> porMedicamento(LocalDate mesReferencia) {
-		CriteriaBuilder builder = manager.getCriteriaBuilder();
-		CriteriaQuery<EstatisticaEntradaMedicamento> criteria = builder.createQuery(EstatisticaEntradaMedicamento.class);
-		Root<EntradaMedicamento> root = criteria.from(EntradaMedicamento.class);
-		
-		criteria.select(builder.construct(EstatisticaEntradaMedicamento.class, 
-				root.get(EntradaMedicamento_.medicamento).get(Medicamento_.nome),
-				builder.sum(root.get(EntradaMedicamento_.quantidade))));
-		
+	public List<EstatisticaEntradaMedicamentoDia> porDia(LocalDate mesReferencia) {
+		CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
+
+		CriteriaQuery<EstatisticaEntradaMedicamentoDia> criteriaQuery = criteriaBuilder
+				.createQuery(EstatisticaEntradaMedicamentoDia.class);
+
+		Root<EntradaMedicamento> root = criteriaQuery.from(EntradaMedicamento.class);
+
+		criteriaQuery.select(criteriaBuilder.construct(EstatisticaEntradaMedicamentoDia.class,
+				root.get(EntradaMedicamento_.medicamento), root.get(EntradaMedicamento_.dataEntrada),
+				criteriaBuilder.sum(root.get(EntradaMedicamento_.quantidade))));
+
 		LocalDate primeiroDia = mesReferencia.withDayOfMonth(1);
 		LocalDate ultimoDia = mesReferencia.withDayOfMonth(mesReferencia.lengthOfMonth());
-		
-		criteria.where(
-				builder.greaterThanOrEqualTo(root.get(EntradaMedicamento_.validade), 
-						primeiroDia),
-				builder.lessThanOrEqualTo(root.get(EntradaMedicamento_.validade), 
-						ultimoDia));
-		
-		criteria.groupBy(root.get(EntradaMedicamento_.medicamento).get(Medicamento_.nome));
-		
-		TypedQuery<EstatisticaEntradaMedicamento> typedQuery = manager
-				.createQuery(criteria);
-		
+
+		criteriaQuery.where(
+				criteriaBuilder.greaterThanOrEqualTo(root.get(EntradaMedicamento_.dataEntrada), primeiroDia),
+				criteriaBuilder.lessThanOrEqualTo(root.get(EntradaMedicamento_.dataEntrada), ultimoDia));
+
+		criteriaQuery.groupBy(root.get(EntradaMedicamento_.medicamento), root.get(EntradaMedicamento_.dataEntrada));
+
+		TypedQuery<EstatisticaEntradaMedicamentoDia> typedQuery = manager.createQuery(criteriaQuery);
+
+		return typedQuery.getResultList();
+	}
+
+	@Override
+	public List<EstatisticaEntradaMedicamento> porMedicamento(LocalDate mesReferencia) {
+		CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
+
+		CriteriaQuery<EstatisticaEntradaMedicamento> criteriaQuery = criteriaBuilder
+				.createQuery(EstatisticaEntradaMedicamento.class);
+
+		Root<EntradaMedicamento> root = criteriaQuery.from(EntradaMedicamento.class);
+
+		criteriaQuery.select(criteriaBuilder.construct(EstatisticaEntradaMedicamento.class,
+				root.get(EntradaMedicamento_.medicamento),
+
+				criteriaBuilder.sum(root.get(EntradaMedicamento_.quantidade))));
+
+		LocalDate primeiroDia = mesReferencia.withDayOfMonth(1);
+		LocalDate ultimoDia = mesReferencia.withDayOfMonth(mesReferencia.lengthOfMonth());
+
+		criteriaQuery.where(
+				criteriaBuilder.greaterThanOrEqualTo(root.get(EntradaMedicamento_.dataEntrada), primeiroDia),
+				criteriaBuilder.lessThanOrEqualTo(root.get(EntradaMedicamento_.dataEntrada), ultimoDia));
+
+		criteriaQuery.groupBy(root.get(EntradaMedicamento_.medicamento));
+
+		TypedQuery<EstatisticaEntradaMedicamento> typedQuery = manager.createQuery(criteriaQuery);
+
 		return typedQuery.getResultList();
 	}
 
@@ -73,22 +101,19 @@ public class EntradaMedicamentoRepositoryImpl implements EntradaMedicamentoRepos
 
 		return new PageImpl<>(query.getResultList(), pageable, total(entradaMedicamentoFilter));
 	}
-	
+
 	@Override
 	public Page<ResumoEntradaMedicamento> resumo(EntradaMedicamentoFilter entradaMedicamentoFilter, Pageable pageable) {
 		CriteriaBuilder builder = manager.getCriteriaBuilder();
 		CriteriaQuery<ResumoEntradaMedicamento> criteria = builder.createQuery(ResumoEntradaMedicamento.class);
 		Root<EntradaMedicamento> root = criteria.from(EntradaMedicamento.class);
-		
-		criteria.select(builder.construct(ResumoEntradaMedicamento.class, 
-				root.get(EntradaMedicamento_.codigo), 
+
+		criteria.select(builder.construct(ResumoEntradaMedicamento.class, root.get(EntradaMedicamento_.codigo),
 				root.get(EntradaMedicamento_.medicamento).get(Medicamento_.nome),
 				root.get(EntradaMedicamento_.medicamento).get(Medicamento_.unidadeDeMedida),
-				root.get(EntradaMedicamento_.dataEntrada),
-				root.get(EntradaMedicamento_.validade), 
-				root.get(EntradaMedicamento_.quantidade),
-				root.get(EntradaMedicamento_.valorUnitario) ));
-		
+				root.get(EntradaMedicamento_.dataEntrada), root.get(EntradaMedicamento_.validade),
+				root.get(EntradaMedicamento_.quantidade), root.get(EntradaMedicamento_.valorUnitario)));
+
 		Predicate[] predicates = criarRestricoes(entradaMedicamentoFilter, builder, root);
 		criteria.where(predicates);
 
@@ -113,8 +138,8 @@ public class EntradaMedicamentoRepositoryImpl implements EntradaMedicamentoRepos
 		}
 
 		if (entradaMedicamentoFilter.getDataValidadeAte() != null) {
-			predicates.add(
-					builder.lessThanOrEqualTo(root.get(EntradaMedicamento_.validade), entradaMedicamentoFilter.getDataValidadeAte()));
+			predicates.add(builder.lessThanOrEqualTo(root.get(EntradaMedicamento_.validade),
+					entradaMedicamentoFilter.getDataValidadeAte()));
 		}
 
 		return predicates.toArray(new Predicate[predicates.size()]);

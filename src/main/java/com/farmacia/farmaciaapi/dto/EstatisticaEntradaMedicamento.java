@@ -2,18 +2,17 @@ package com.farmacia.farmaciaapi.dto;
 
 import java.math.BigDecimal;
 
-import com.farmacia.farmaciaapi.model.EntradaMedicamento;
 import com.farmacia.farmaciaapi.model.Medicamento;
 
 public class EstatisticaEntradaMedicamento {
 
 	private Medicamento medicamento;
 
-	private BigDecimal total;
+	private BigDecimal quantidade;
 
-	public EstatisticaEntradaMedicamento(Medicamento medicamento, BigDecimal total) {
-		this.medicamento = medicamento;
-		this.total = total;
+	public EstatisticaEntradaMedicamento(Medicamento medicamento, BigDecimal quantidade) {
+		this.medicamento = medicamento ;
+		this.quantidade = (BigDecimal) quantidade;
 	}
 
 	public Medicamento getMedicamento() {
@@ -24,12 +23,12 @@ public class EstatisticaEntradaMedicamento {
 		this.medicamento = medicamento;
 	}
 
-	public BigDecimal getTotal() {
-		return total;
+	public BigDecimal getQuantidade() {
+		return quantidade;
 	}
 
-	public void setTotal(BigDecimal total) {
-		this.total = total;
+	public void setQuantidade(BigDecimal quantidade) {
+		this.quantidade = quantidade;
 	}
 
 }

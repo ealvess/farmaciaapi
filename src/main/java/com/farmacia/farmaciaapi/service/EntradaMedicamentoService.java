@@ -1,5 +1,6 @@
 package com.farmacia.farmaciaapi.service;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
@@ -27,8 +28,9 @@ public class EntradaMedicamentoService {
 	@Autowired
 	private FornecedorRepository fornecedorRepository;
 
-	private Integer qtdNova;
+	private BigDecimal qtdNova;
 
+	
 	public EntradaMedicamento atualizar(Long codigo, EntradaMedicamento entradaMedicamento) {
 
 		EntradaMedicamento medicamentoSalvo = buscarMedicamentoPeloCodigo(codigo);
@@ -38,9 +40,9 @@ public class EntradaMedicamentoService {
 		return this.entradaMedicamentoRepository.save(medicamentoSalvo);
 	}
 
-	public void atualizarQuantidade(Long codigo, Integer quantidade) {
+	public void atualizarQuantidade(Long codigo, BigDecimal quantidade) {
 		EntradaMedicamento medicamentoSalvo = buscarMedicamentoPeloCodigo(codigo);
-		qtdNova = medicamentoSalvo.getQuantidade() - quantidade;
+		qtdNova = medicamentoSalvo.getQuantidade().subtract(quantidade);
 		medicamentoSalvo.setQuantidade(qtdNova);
 		entradaMedicamentoRepository.save(medicamentoSalvo);
 	}

@@ -1,5 +1,6 @@
 package com.farmacia.farmaciaapi.resource;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.farmacia.farmaciaapi.dto.EstatisticaEntradaMedicamento;
+import com.farmacia.farmaciaapi.dto.EstatisticaEntradaMedicamentoDia;
 import com.farmacia.farmaciaapi.event.RecursoCriadoEvent;
 import com.farmacia.farmaciaapi.exceptionhandler.FarmaciaExceptionHandler.Erro;
 import com.farmacia.farmaciaapi.model.EntradaMedicamento;
@@ -50,6 +53,18 @@ public class EntradaMedicamentoResource {
 	
 	@Autowired
 	private MessageSource messageSource;
+	
+	@GetMapping("/estatisticas/por-medicamento")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ENTRADA_DE_MEDICAMENTO')")
+	public List<EstatisticaEntradaMedicamento> porMedicamento() {
+		return entradaMedicamentoRepository.porMedicamento(LocalDate.now());
+	}
+	
+	@GetMapping("/estatisticas/por-dia")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ENTRADA_DE_MEDICAMENTO')")
+	public List<EstatisticaEntradaMedicamentoDia> porDia() {
+		return entradaMedicamentoRepository.porDia(LocalDate.now());
+	}
 
 	@GetMapping
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ENTRADA_DE_MEDICAMENTO')")

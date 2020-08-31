@@ -82,11 +82,11 @@ public class ItemSaidaMedicamentoPorCentroDeCustoResource {
 
 	@PutMapping("/{codigo}/quantidade")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void atualizarQuantidade(@PathVariable Long codigo, Integer quantidade) {
+	public void atualizarQuantidade(@PathVariable Long codigo, BigDecimal quantidade) {
 		entradaMedicamentoService.atualizarQuantidade(codigo, quantidade);
 	}
 
-	public BigDecimal calcularValorTotal(Integer quantidade, BigDecimal valorUnitario) {
+	public BigDecimal calcularValorTotal(BigDecimal quantidade, BigDecimal valorUnitario) {
 		int qtd = quantidade.intValue();
 		BigDecimal temp = new BigDecimal(qtd);
 

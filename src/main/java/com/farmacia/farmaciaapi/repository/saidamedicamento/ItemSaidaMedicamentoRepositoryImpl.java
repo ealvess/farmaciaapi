@@ -1,5 +1,6 @@
 package com.farmacia.farmaciaapi.repository.saidamedicamento;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
+import com.farmacia.farmaciaapi.dto.EstatisticaSaidaMedicamentoPorPaciente;
 import com.farmacia.farmaciaapi.model.EntradaMedicamento_;
 import com.farmacia.farmaciaapi.model.ItemSaidaMedicamento;
 import com.farmacia.farmaciaapi.model.ItemSaidaMedicamento_;
@@ -28,6 +30,32 @@ public class ItemSaidaMedicamentoRepositoryImpl implements ItemSaidaMedicamentoR
 
 	@PersistenceContext
 	private EntityManager manager;
+	
+	@Override
+	public List<EstatisticaSaidaMedicamentoPorPaciente> porPaciente(LocalDate inicio, LocalDate fim) {
+		CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
+
+		CriteriaQuery<EstatisticaSaidaMedicamentoPorPaciente> criteriaQuery = criteriaBuilder
+				.createQuery(EstatisticaSaidaMedicamentoPorPaciente.class);
+
+		Root<ItemSaidaMedicamento> root = criteriaQuery.from(ItemSaidaMedicamento.class);
+
+		criteriaQuery.select(criteriaBuilder.construct(EstatisticaSaidaMedicamentoPorPaciente.class,
+				root.get(ItemSaidaMedicamento_.paciente),
+				root.get(ItemSaidaMedicamento_.dataSaida),
+				criteriaBuilder.sum(root.get(ItemSaidaMedicamento_.quantidade))));
+
+
+		criteriaQuery.where(
+				criteriaBuilder.greaterThanOrEqualTo(root.get(ItemSaidaMedicamento_.dataSaida), inicio),
+				criteriaBuilder.lessThanOrEqualTo(root.get(ItemSaidaMedicamento_.dataSaida), fim));
+
+		criteriaQuery.groupBy(root.get(ItemSaidaMedicamento_.paciente));
+
+		TypedQuery<EstatisticaSaidaMedicamentoPorPaciente> typedQuery = manager.createQuery(criteriaQuery);
+
+		return typedQuery.getResultList();
+	}
 
 	@Override
 	public Page<ItemSaidaMedicamento> filtrar(ItemSaidaMedicamentoFilter itemSaidaMedicamentoFilter, Pageable pageable) {
