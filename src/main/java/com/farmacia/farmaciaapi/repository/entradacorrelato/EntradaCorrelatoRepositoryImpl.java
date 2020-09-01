@@ -1,5 +1,6 @@
 package com.farmacia.farmaciaapi.repository.entradacorrelato;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
+import com.farmacia.farmaciaapi.dto.EstatisticaEntradaCorrelatoPorMes;
 import com.farmacia.farmaciaapi.model.Correlato_;
 import com.farmacia.farmaciaapi.model.EntradaCorrelato;
 import com.farmacia.farmaciaapi.model.EntradaCorrelato_;
@@ -26,6 +28,34 @@ public class EntradaCorrelatoRepositoryImpl implements EntradaCorrelatoRepositor
 
 	@PersistenceContext
 	private EntityManager manager;
+
+	@Override
+	public List<EstatisticaEntradaCorrelatoPorMes> porMes(LocalDate mesReferencia) {
+		CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
+
+		CriteriaQuery<EstatisticaEntradaCorrelatoPorMes> criteriaQuery = criteriaBuilder
+				.createQuery(EstatisticaEntradaCorrelatoPorMes.class);
+
+		Root<EntradaCorrelato> root = criteriaQuery.from(EntradaCorrelato.class);
+
+		criteriaQuery.select(criteriaBuilder.construct(EstatisticaEntradaCorrelatoPorMes.class,
+				root.get(EntradaCorrelato_.correlato),
+
+				criteriaBuilder.sum(root.get(EntradaCorrelato_.quantidade))));
+
+		LocalDate primeiroDia = mesReferencia.withDayOfMonth(1);
+		LocalDate ultimoDia = mesReferencia.withDayOfMonth(mesReferencia.lengthOfMonth());
+
+		criteriaQuery.where(
+				criteriaBuilder.greaterThanOrEqualTo(root.get(EntradaCorrelato_.dataEntrada), primeiroDia),
+				criteriaBuilder.lessThanOrEqualTo(root.get(EntradaCorrelato_.dataEntrada), ultimoDia));
+
+		criteriaQuery.groupBy(root.get(EntradaCorrelato_.correlato));
+
+		TypedQuery<EstatisticaEntradaCorrelatoPorMes> typedQuery = manager.createQuery(criteriaQuery);
+
+		return typedQuery.getResultList();
+	}
 
 	@Override
 	public Page<EntradaCorrelato> filtrar(EntradaCorrelatoFilter entradaCorrelatoFilter, Pageable pageable) {
@@ -50,14 +80,11 @@ public class EntradaCorrelatoRepositoryImpl implements EntradaCorrelatoRepositor
 		CriteriaQuery<ResumoEntradaCorrelatos> criteria = builder.createQuery(ResumoEntradaCorrelatos.class);
 		Root<EntradaCorrelato> root = criteria.from(EntradaCorrelato.class);
 
-		criteria.select(builder.construct(ResumoEntradaCorrelatos.class,
-				root.get(EntradaCorrelato_.codigo), 
+		criteria.select(builder.construct(ResumoEntradaCorrelatos.class, root.get(EntradaCorrelato_.codigo),
 				root.get(EntradaCorrelato_.correlato).get(Correlato_.nome),
 				root.get(EntradaCorrelato_.correlato).get(Correlato_.unidadeDeMedida),
-				root.get(EntradaCorrelato_.dataEntrada),
-				root.get(EntradaCorrelato_.dataValidade), 
-				root.get(EntradaCorrelato_.quantidade),
-				root.get(EntradaCorrelato_.valorUnitario) ));
+				root.get(EntradaCorrelato_.dataEntrada), root.get(EntradaCorrelato_.dataValidade),
+				root.get(EntradaCorrelato_.quantidade), root.get(EntradaCorrelato_.valorUnitario)));
 
 		Predicate[] predicates = criarRestricoes(entradaCorrelatoFilter, builder, root);
 		criteria.where(predicates);
@@ -83,9 +110,8 @@ public class EntradaCorrelatoRepositoryImpl implements EntradaCorrelatoRepositor
 		}
 
 		if (entradaCorrelatoFilter.getDataValidadeAte() != null) {
-			predicates.add(
-					builder.lessThanOrEqualTo(root.get(EntradaCorrelato_.dataValidade), 
-							entradaCorrelatoFilter.getDataValidadeAte()));
+			predicates.add(builder.lessThanOrEqualTo(root.get(EntradaCorrelato_.dataValidade),
+					entradaCorrelatoFilter.getDataValidadeAte()));
 		}
 
 		return predicates.toArray(new Predicate[predicates.size()]);

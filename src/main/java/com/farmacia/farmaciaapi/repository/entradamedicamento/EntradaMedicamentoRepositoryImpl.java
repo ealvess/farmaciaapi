@@ -17,7 +17,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
-import com.farmacia.farmaciaapi.dto.EstatisticaEntradaMedicamento;
+import com.farmacia.farmaciaapi.dto.EstatisticaEntradaMedicamentoPorMes;
 import com.farmacia.farmaciaapi.dto.EstatisticaEntradaMedicamentoDia;
 import com.farmacia.farmaciaapi.model.EntradaMedicamento;
 import com.farmacia.farmaciaapi.model.EntradaMedicamento_;
@@ -58,15 +58,15 @@ public class EntradaMedicamentoRepositoryImpl implements EntradaMedicamentoRepos
 	}
 
 	@Override
-	public List<EstatisticaEntradaMedicamento> porMedicamento(LocalDate mesReferencia) {
+	public List<EstatisticaEntradaMedicamentoPorMes> porMedicamento(LocalDate mesReferencia) {
 		CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
 
-		CriteriaQuery<EstatisticaEntradaMedicamento> criteriaQuery = criteriaBuilder
-				.createQuery(EstatisticaEntradaMedicamento.class);
+		CriteriaQuery<EstatisticaEntradaMedicamentoPorMes> criteriaQuery = criteriaBuilder
+				.createQuery(EstatisticaEntradaMedicamentoPorMes.class);
 
 		Root<EntradaMedicamento> root = criteriaQuery.from(EntradaMedicamento.class);
 
-		criteriaQuery.select(criteriaBuilder.construct(EstatisticaEntradaMedicamento.class,
+		criteriaQuery.select(criteriaBuilder.construct(EstatisticaEntradaMedicamentoPorMes.class,
 				root.get(EntradaMedicamento_.medicamento),
 
 				criteriaBuilder.sum(root.get(EntradaMedicamento_.quantidade))));
@@ -80,7 +80,7 @@ public class EntradaMedicamentoRepositoryImpl implements EntradaMedicamentoRepos
 
 		criteriaQuery.groupBy(root.get(EntradaMedicamento_.medicamento));
 
-		TypedQuery<EstatisticaEntradaMedicamento> typedQuery = manager.createQuery(criteriaQuery);
+		TypedQuery<EstatisticaEntradaMedicamentoPorMes> typedQuery = manager.createQuery(criteriaQuery);
 
 		return typedQuery.getResultList();
 	}

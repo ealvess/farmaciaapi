@@ -4,13 +4,13 @@ import java.math.BigDecimal;
 
 import com.farmacia.farmaciaapi.model.Medicamento;
 
-public class EstatisticaEntradaMedicamento {
+public class EstatisticaEntradaMedicamentoPorMes {
 
 	private Medicamento medicamento;
 
 	private BigDecimal quantidade;
 
-	public EstatisticaEntradaMedicamento(Medicamento medicamento, BigDecimal quantidade) {
+	public EstatisticaEntradaMedicamentoPorMes(Medicamento medicamento, BigDecimal quantidade) {
 		this.medicamento = medicamento ;
 		this.quantidade = (BigDecimal) quantidade;
 	}

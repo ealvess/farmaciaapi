@@ -10,11 +10,11 @@ public class ResumoEntradaCorrelatos {
 	private String apresentacao;
 	private LocalDate dataEntrada;
 	private LocalDate dataValidade;
-	private Integer quantidade;
+	private BigDecimal quantidade;
 	private BigDecimal valorUnitario;
 
 	public ResumoEntradaCorrelatos(Long codigo, String correlato, String apresentacao, LocalDate dataEntrada,
-			LocalDate dataValidade, Integer quantidade, BigDecimal valorUnitario) {
+			LocalDate dataValidade, BigDecimal quantidade, BigDecimal valorUnitario) {
 		super();
 		this.codigo = codigo;
 		this.correlato = correlato;
@@ -65,11 +65,11 @@ public class ResumoEntradaCorrelatos {
 		this.dataValidade = dataValidade;
 	}
 
-	public Integer getQuantidade() {
+	public BigDecimal getQuantidade() {
 		return quantidade;
 	}
 
-	public void setQuantidade(Integer quantidade) {
+	public void setQuantidade(BigDecimal quantidade) {
 		this.quantidade = quantidade;
 	}
 

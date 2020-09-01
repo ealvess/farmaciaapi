@@ -1,5 +1,6 @@
 package com.farmacia.farmaciaapi.service;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
@@ -27,7 +28,7 @@ public class EntradaCorrelatoService {
 	@Autowired
 	private FornecedorRepository fornecedorRepository;
 
-	private Integer qtdNova;
+	private BigDecimal qtdNova;
 
 	public EntradaCorrelato atualizar(Long codigo, EntradaCorrelato entradaCorrelato) {
 
@@ -38,9 +39,9 @@ public class EntradaCorrelatoService {
 		return this.entradaCorrelatoRepository.save(correlatoSalvo);
 	}
 
-	public void atualizarQuantidade(Long codigo, Integer quantidade) {
+	public void atualizarQuantidade(Long codigo, BigDecimal quantidade) {
 		EntradaCorrelato correlatoSalvo = buscarCorrelatoPeloCodigo(codigo);
-		qtdNova = correlatoSalvo.getQuantidade() - quantidade;
+		qtdNova = correlatoSalvo.getQuantidade().subtract(quantidade);
 		correlatoSalvo.setQuantidade(qtdNova);
 		entradaCorrelatoRepository.save(correlatoSalvo);
 	}
