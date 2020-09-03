@@ -13,7 +13,7 @@ import com.farmacia.farmaciaapi.repository.projection.ResumoSaidaDeMedicamentos;
 
 public interface ItemSaidaMedicamentoRepositoryQuery {
 	
-	public List<EstatisticaSaidaMedicamentoPorPaciente> porPaciente(LocalDate inicio, LocalDate fim);
+	public List<EstatisticaSaidaMedicamentoPorPaciente> porMes(LocalDate mesReferencia);
 	
 	public Page<ItemSaidaMedicamento> filtrar(ItemSaidaMedicamentoFilter itemSaidaMedicamentoFilter, Pageable pageable);
 	public Page<ResumoSaidaDeMedicamentos> resumo(ItemSaidaMedicamentoFilter itemSaidaMedicamentoFilter, Pageable pageable);

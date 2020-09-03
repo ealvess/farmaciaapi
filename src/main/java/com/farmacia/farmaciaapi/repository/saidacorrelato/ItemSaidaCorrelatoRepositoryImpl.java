@@ -1,5 +1,6 @@
 package com.farmacia.farmaciaapi.repository.saidacorrelato;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
+import com.farmacia.farmaciaapi.dto.EstatisticaSaidaCorrelatoPorMes;
 import com.farmacia.farmaciaapi.model.CentroDeCusto_;
 import com.farmacia.farmaciaapi.model.Correlato_;
 import com.farmacia.farmaciaapi.model.EntradaCorrelato_;
@@ -28,6 +30,34 @@ public class ItemSaidaCorrelatoRepositoryImpl implements ItemSaidaCorrelatoRepos
 
 	@PersistenceContext
 	private EntityManager manager;
+	
+	@Override
+	public List<EstatisticaSaidaCorrelatoPorMes> porMes(LocalDate mesReferencia) {
+		CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
+
+		CriteriaQuery<EstatisticaSaidaCorrelatoPorMes> criteriaQuery = criteriaBuilder
+				.createQuery(EstatisticaSaidaCorrelatoPorMes.class);
+
+		Root<ItemSaidaCorrelato> root = criteriaQuery.from(ItemSaidaCorrelato.class);
+
+		criteriaQuery.select(criteriaBuilder.construct(EstatisticaSaidaCorrelatoPorMes.class,
+				root.get(ItemSaidaCorrelato_.entradaCorrelato),
+				root.get(ItemSaidaCorrelato_.dataSaida),
+				criteriaBuilder.sum(root.get(ItemSaidaCorrelato_.quantidade))));
+
+		LocalDate primeiroDia = mesReferencia.withDayOfMonth(1);
+		LocalDate ultimoDia = mesReferencia.withDayOfMonth(mesReferencia.lengthOfMonth());
+
+		criteriaQuery.where(
+				criteriaBuilder.greaterThanOrEqualTo(root.get(ItemSaidaCorrelato_.dataSaida), primeiroDia),
+				criteriaBuilder.lessThanOrEqualTo(root.get(ItemSaidaCorrelato_.dataSaida), ultimoDia));
+
+		criteriaQuery.groupBy(root.get(ItemSaidaCorrelato_.entradaCorrelato), root.get(ItemSaidaCorrelato_.dataSaida));
+
+		TypedQuery<EstatisticaSaidaCorrelatoPorMes> typedQuery = manager.createQuery(criteriaQuery);
+
+		return typedQuery.getResultList();
+	}
 
 	@Override
 	public Page<ItemSaidaCorrelato> filtrar(ItemSaidaCorrelatoFilter itemSaidaCorrelatoFilter, Pageable pageable) {

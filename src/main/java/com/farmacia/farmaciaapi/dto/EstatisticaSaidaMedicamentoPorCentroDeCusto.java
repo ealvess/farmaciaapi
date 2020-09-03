@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 import com.farmacia.farmaciaapi.model.EntradaMedicamento;
 
-public class EstatisticaSaidaMedicamentoPorPaciente {
+public class EstatisticaSaidaMedicamentoPorCentroDeCusto {
 
 	private EntradaMedicamento medicamento;
 
@@ -13,7 +13,7 @@ public class EstatisticaSaidaMedicamentoPorPaciente {
 
 	private BigDecimal quantidade;
 
-	public EstatisticaSaidaMedicamentoPorPaciente(EntradaMedicamento medicamento,  LocalDate dataSaida,
+	public EstatisticaSaidaMedicamentoPorCentroDeCusto(EntradaMedicamento medicamento,  LocalDate dataSaida,
 			BigDecimal quantidade) {
 		this.medicamento = medicamento ;
 		this.dataSaida =  (LocalDate) dataSaida;

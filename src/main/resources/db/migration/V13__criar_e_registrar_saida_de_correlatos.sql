@@ -10,8 +10,8 @@ CREATE TABLE saida_correlato(
 	FOREIGN KEY (codigo_entrada_correlato) REFERENCES entrada_correlato(codigo)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO saida_correlato(codigo_centro_de_custo, codigo_entrada_correlato, data_saida, quantidade, valor_unitario, total) VALUES ('1', '1', '2020/06/30', '100', '1.65', '165');
-INSERT INTO saida_correlato(codigo_centro_de_custo, codigo_entrada_correlato, data_saida, quantidade, valor_unitario, total) VALUES ('1', '1', '2020/06/29', '100', '1.65', '165');
-INSERT INTO saida_correlato(codigo_centro_de_custo, codigo_entrada_correlato, data_saida, quantidade, valor_unitario, total) VALUES ('1', '2', '2020/06/29', '100', '1.65', '165');
-INSERT INTO saida_correlato(codigo_centro_de_custo, codigo_entrada_correlato, data_saida, quantidade, valor_unitario, total) VALUES ('3', '3', '2020/06/29', '100', '1.65', '165');
+INSERT INTO saida_correlato(codigo_centro_de_custo, codigo_entrada_correlato, data_saida, quantidade, valor_unitario, total) VALUES ('1', '1', '2020/09/03', '100', '1.65', '165');
+INSERT INTO saida_correlato(codigo_centro_de_custo, codigo_entrada_correlato, data_saida, quantidade, valor_unitario, total) VALUES ('1', '1', '2020/09/14', '100', '1.65', '165');
+INSERT INTO saida_correlato(codigo_centro_de_custo, codigo_entrada_correlato, data_saida, quantidade, valor_unitario, total) VALUES ('1', '2', '2020/09/22', '100', '1.65', '165');
+INSERT INTO saida_correlato(codigo_centro_de_custo, codigo_entrada_correlato, data_saida, quantidade, valor_unitario, total) VALUES ('3', '3', '2020/09/30', '100', '1.65', '165');
 

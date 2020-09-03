@@ -2,6 +2,7 @@ package com.farmacia.farmaciaapi.resource;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -9,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.farmacia.farmaciaapi.dto.EstatisticaSaidaMedicamentoPorPaciente;
 import com.farmacia.farmaciaapi.event.RecursoCriadoEvent;
 import com.farmacia.farmaciaapi.model.ItemSaidaMedicamento;
 import com.farmacia.farmaciaapi.repository.ItemSaidaMedicamentoRepository;
@@ -50,7 +50,13 @@ public class ItemSaidaMedicamentoResource {
 
 	private BigDecimal valorTotal;
 	
-	@GetMapping("/relatorios/por-paciente")
+	@GetMapping("/estatisticas/por-mes")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ITEM_SAIDA_MEDICAMENTO')")
+	public List<EstatisticaSaidaMedicamentoPorPaciente> porMes() {
+		return itemSaidaMedicamentoRepository.porMes(LocalDate.now());
+	}
+	
+	/*@GetMapping("/relatorios/por-paciente")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ITEM_SAIDA_MEDICAMENTO')")
 	public ResponseEntity<byte[]> relatorioPorPpaciente(
 			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate inicio, 
@@ -60,7 +66,7 @@ public class ItemSaidaMedicamentoResource {
 		return ResponseEntity.ok()
 				.header(org.springframework.http.HttpHeaders.CONTENT_TYPE, org.springframework.http.MediaType.APPLICATION_PDF_VALUE)
 				.body(relatorio);
-	}
+	}*/
 
 	@GetMapping
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ITEM_SAIDA_MEDICAMENTO')")

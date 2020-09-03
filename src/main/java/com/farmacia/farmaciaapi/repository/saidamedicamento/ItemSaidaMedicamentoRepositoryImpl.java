@@ -32,7 +32,7 @@ public class ItemSaidaMedicamentoRepositoryImpl implements ItemSaidaMedicamentoR
 	private EntityManager manager;
 	
 	@Override
-	public List<EstatisticaSaidaMedicamentoPorPaciente> porPaciente(LocalDate inicio, LocalDate fim) {
+	public List<EstatisticaSaidaMedicamentoPorPaciente> porMes(LocalDate mesReferencia) {
 		CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
 
 		CriteriaQuery<EstatisticaSaidaMedicamentoPorPaciente> criteriaQuery = criteriaBuilder
@@ -41,16 +41,18 @@ public class ItemSaidaMedicamentoRepositoryImpl implements ItemSaidaMedicamentoR
 		Root<ItemSaidaMedicamento> root = criteriaQuery.from(ItemSaidaMedicamento.class);
 
 		criteriaQuery.select(criteriaBuilder.construct(EstatisticaSaidaMedicamentoPorPaciente.class,
-				root.get(ItemSaidaMedicamento_.paciente),
+				root.get(ItemSaidaMedicamento_.entradaMedicamento),
 				root.get(ItemSaidaMedicamento_.dataSaida),
 				criteriaBuilder.sum(root.get(ItemSaidaMedicamento_.quantidade))));
 
+		LocalDate primeiroDia = mesReferencia.withDayOfMonth(1);
+		LocalDate ultimoDia = mesReferencia.withDayOfMonth(mesReferencia.lengthOfMonth());
 
 		criteriaQuery.where(
-				criteriaBuilder.greaterThanOrEqualTo(root.get(ItemSaidaMedicamento_.dataSaida), inicio),
-				criteriaBuilder.lessThanOrEqualTo(root.get(ItemSaidaMedicamento_.dataSaida), fim));
+				criteriaBuilder.greaterThanOrEqualTo(root.get(ItemSaidaMedicamento_.dataSaida), primeiroDia),
+				criteriaBuilder.lessThanOrEqualTo(root.get(ItemSaidaMedicamento_.dataSaida), ultimoDia));
 
-		criteriaQuery.groupBy(root.get(ItemSaidaMedicamento_.paciente));
+		criteriaQuery.groupBy(root.get(ItemSaidaMedicamento_.entradaMedicamento), root.get(ItemSaidaMedicamento_.dataSaida));
 
 		TypedQuery<EstatisticaSaidaMedicamentoPorPaciente> typedQuery = manager.createQuery(criteriaQuery);
 

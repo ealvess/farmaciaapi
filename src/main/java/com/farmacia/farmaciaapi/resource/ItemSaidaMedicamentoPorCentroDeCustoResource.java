@@ -1,6 +1,8 @@
 package com.farmacia.farmaciaapi.resource;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.farmacia.farmaciaapi.dto.EstatisticaSaidaMedicamentoPorCentroDeCusto;
+import com.farmacia.farmaciaapi.dto.EstatisticaSaidaMedicamentoPorPaciente;
 import com.farmacia.farmaciaapi.event.RecursoCriadoEvent;
 import com.farmacia.farmaciaapi.model.ItemSaidaMedicamentoPorCentroDeCusto;
 import com.farmacia.farmaciaapi.repository.ItemSaidaMedicamentoPorCentroDeCustoRepository;
@@ -42,6 +46,13 @@ public class ItemSaidaMedicamentoPorCentroDeCustoResource {
 	private ApplicationEventPublisher publisher;
 
 	private BigDecimal valorTotal;
+	
+	@GetMapping("/estatisticas/por-mes")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ITEM_SAIDA_MEDICAMENTO')")
+	public List<EstatisticaSaidaMedicamentoPorCentroDeCusto> porMes() {
+		return itemSaidaMedicamentoRepository.porMes(LocalDate.now());
+	}
+	
 
 	@GetMapping
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ITEM_SAIDA_MEDICAMENTO')")

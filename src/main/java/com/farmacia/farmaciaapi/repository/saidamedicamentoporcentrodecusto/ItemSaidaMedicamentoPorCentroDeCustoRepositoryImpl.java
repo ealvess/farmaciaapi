@@ -1,5 +1,6 @@
 package com.farmacia.farmaciaapi.repository.saidamedicamentoporcentrodecusto;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
+import com.farmacia.farmaciaapi.dto.EstatisticaSaidaMedicamentoPorCentroDeCusto;
 import com.farmacia.farmaciaapi.model.CentroDeCusto_;
 import com.farmacia.farmaciaapi.model.EntradaMedicamento_;
 import com.farmacia.farmaciaapi.model.ItemSaidaMedicamentoPorCentroDeCusto;
@@ -28,6 +30,34 @@ public class ItemSaidaMedicamentoPorCentroDeCustoRepositoryImpl implements ItemS
 
 	@PersistenceContext
 	private EntityManager manager;
+	
+	@Override
+	public List<EstatisticaSaidaMedicamentoPorCentroDeCusto> porMes(LocalDate mesReferencia) {
+		CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
+
+		CriteriaQuery<EstatisticaSaidaMedicamentoPorCentroDeCusto> criteriaQuery = criteriaBuilder
+				.createQuery(EstatisticaSaidaMedicamentoPorCentroDeCusto.class);
+
+		Root<ItemSaidaMedicamentoPorCentroDeCusto> root = criteriaQuery.from(ItemSaidaMedicamentoPorCentroDeCusto.class);
+
+		criteriaQuery.select(criteriaBuilder.construct(EstatisticaSaidaMedicamentoPorCentroDeCusto.class,
+				root.get(ItemSaidaMedicamentoPorCentroDeCusto_.entradaMedicamento),
+				root.get(ItemSaidaMedicamentoPorCentroDeCusto_.dataSaida),
+				criteriaBuilder.sum(root.get(ItemSaidaMedicamentoPorCentroDeCusto_.quantidade))));
+
+		LocalDate primeiroDia = mesReferencia.withDayOfMonth(1);
+		LocalDate ultimoDia = mesReferencia.withDayOfMonth(mesReferencia.lengthOfMonth());
+
+		criteriaQuery.where(
+				criteriaBuilder.greaterThanOrEqualTo(root.get(ItemSaidaMedicamentoPorCentroDeCusto_.dataSaida), primeiroDia),
+				criteriaBuilder.lessThanOrEqualTo(root.get(ItemSaidaMedicamentoPorCentroDeCusto_.dataSaida), ultimoDia));
+
+		criteriaQuery.groupBy(root.get(ItemSaidaMedicamentoPorCentroDeCusto_.entradaMedicamento), root.get(ItemSaidaMedicamentoPorCentroDeCusto_.dataSaida));
+
+		TypedQuery<EstatisticaSaidaMedicamentoPorCentroDeCusto> typedQuery = manager.createQuery(criteriaQuery);
+
+		return typedQuery.getResultList();
+	}
 
 	@Override
 	public Page<ItemSaidaMedicamentoPorCentroDeCusto> filtrar(ItemSaidaMedicamentoPorCentroDeCustoFilter itemSaidaMedicamentoFilter, Pageable pageable) {
