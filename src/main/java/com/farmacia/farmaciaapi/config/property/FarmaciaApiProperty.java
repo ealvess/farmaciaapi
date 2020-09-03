@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("farmacia")
 public class FarmaciaApiProperty {
 
-	private String originPermitida = "http://localhost:8000";
+	private String originPermitida = "https://farmacia-angular.herokuapp.com";
 
 	private final Seguranca seguranca = new Seguranca();
 
