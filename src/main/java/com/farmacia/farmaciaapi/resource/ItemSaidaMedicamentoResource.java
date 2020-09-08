@@ -30,7 +30,6 @@ import com.farmacia.farmaciaapi.repository.ItemSaidaMedicamentoRepository;
 import com.farmacia.farmaciaapi.repository.filter.ItemSaidaMedicamentoFilter;
 import com.farmacia.farmaciaapi.repository.projection.ResumoSaidaDeMedicamentos;
 import com.farmacia.farmaciaapi.service.EntradaMedicamentoService;
-import com.farmacia.farmaciaapi.service.SaidaDeMedicamentoService;
 
 @RestController
 @RequestMapping("/saidamedicamentos")
@@ -42,8 +41,6 @@ public class ItemSaidaMedicamentoResource {
 	@Autowired
 	private EntradaMedicamentoService entradaMedicamentoService;
 	
-	@Autowired
-	private SaidaDeMedicamentoService saidaDeMedicamentoPorPacienteService;
 
 	@Autowired
 	private ApplicationEventPublisher publisher;

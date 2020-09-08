@@ -1,6 +1,13 @@
 package com.farmacia.farmaciaapi.service;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
@@ -8,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.farmacia.farmaciaapi.dto.EstatisticaEntradaMedicamentoPorMes;
 import com.farmacia.farmaciaapi.model.EntradaMedicamento;
 import com.farmacia.farmaciaapi.model.Fornecedor;
 import com.farmacia.farmaciaapi.model.Medicamento;
@@ -15,6 +23,11 @@ import com.farmacia.farmaciaapi.repository.EntradaMedicamentoRepository;
 import com.farmacia.farmaciaapi.repository.FornecedorRepository;
 import com.farmacia.farmaciaapi.repository.MedicamentoRepository;
 import com.farmacia.farmaciaapi.service.exception.ObjetoInexistenteOuInativoException;
+
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 @Service
 public class EntradaMedicamentoService {
@@ -29,6 +42,21 @@ public class EntradaMedicamentoService {
 	private FornecedorRepository fornecedorRepository;
 
 	private BigDecimal qtdNova;
+	
+	public byte[] relatorioPorMes(LocalDate mesReferencia) throws Exception {
+		List<EstatisticaEntradaMedicamentoPorMes> dados = entradaMedicamentoRepository.porMedicamento(mesReferencia.now());
+		
+		Map<String, Object> parametros = new HashMap<>();
+		parametros.put("REPORT_LOCALE", new Locale("pt", "BR"));
+		
+		InputStream inputStream = this.getClass().getResourceAsStream(
+				"/relatorios/quantidade_de_entrada_de_medicamento_por_mes.jasper");
+		
+		JasperPrint jasperPrint = JasperFillManager.fillReport(inputStream, parametros,
+				new JRBeanCollectionDataSource(dados));
+		
+		return JasperExportManager.exportReportToPdf(jasperPrint);
+	}
 
 	
 	public EntradaMedicamento atualizar(Long codigo, EntradaMedicamento entradaMedicamento) {

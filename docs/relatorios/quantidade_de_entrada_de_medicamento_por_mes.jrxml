@@ -7,10 +7,7 @@
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
-	<field name="quantidade" class="java.math.BigDecimal"/>
-	<field name="medicamento" class="com.farmacia.farmaciaapi.model.Medicamento"/>
-	<field name="paciente" class="com.farmacia.farmaciaapi.model.Paciente"/>
-	<field name="dataSaida" class="java.util.Date"/>
+	<field name="medicamento" class="java.lang.String"/>
 	<title>
 		<band height="60" splitType="Stretch">
 			<textField>
@@ -18,7 +15,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="18"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Saida de Medicamentos Por Paciente" +  "De" + DATEFORMAT($P{DT_INICIO}, "dd/MM/yyyy") + "Até" + 
+				<textFieldExpression><![CDATA["Saida de Medicamentos Por Mês" +  "De" + DATEFORMAT($P{DT_INICIO}, "dd/MM/yyyy") + "Até" + 
 DATEFORMAT($P{DT_FIM}, "dd/MM/yyyy")]]></textFieldExpression>
 			</textField>
 		</band>
@@ -29,20 +26,12 @@ DATEFORMAT($P{DT_FIM}, "dd/MM/yyyy")]]></textFieldExpression>
 				<reportElement x="0" y="0" width="555" height="25" backcolor="#D4D4D4" uuid="49cfbf9b-233f-4f62-af9f-2fa41f10b50f"/>
 			</rectangle>
 			<line>
-				<reportElement x="110" y="1" width="1" height="24" uuid="628e298e-8ab6-44ae-bd3d-30be98bc9bba"/>
-			</line>
-			<line>
 				<reportElement x="360" y="0" width="1" height="25" uuid="e26858e8-ee72-494e-a56b-a3ff0c05655f"/>
 			</line>
 			<staticText>
-				<reportElement x="1" y="1" width="109" height="23" uuid="a311e75e-ab82-42c6-b493-0295c54626bb"/>
+				<reportElement x="1" y="1" width="359" height="23" uuid="a311e75e-ab82-42c6-b493-0295c54626bb"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Medicamento]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="110" y="1" width="250" height="23" uuid="e9958e5e-dc34-4491-8f2b-ca17e71fcd83"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<text><![CDATA[Paciente]]></text>
 			</staticText>
 			<line>
 				<reportElement x="480" y="0" width="1" height="25" uuid="198e3669-fe39-49cd-894b-19b822e8e7c4"/>
@@ -60,13 +49,10 @@ DATEFORMAT($P{DT_FIM}, "dd/MM/yyyy")]]></textFieldExpression>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="25" splitType="Stretch">
+		<band height="30" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<line>
 				<reportElement x="0" y="0" width="1" height="25" uuid="4e8c74ab-068c-4219-b15e-574f0f18f736"/>
-			</line>
-			<line>
-				<reportElement x="110" y="0" width="1" height="25" uuid="b67aaf59-e211-42bb-b04d-8fec30461e96"/>
 			</line>
 			<line>
 				<reportElement x="360" y="0" width="1" height="25" uuid="488cd459-10f1-406f-b84c-80de7e846fb3"/>
@@ -81,17 +67,9 @@ DATEFORMAT($P{DT_FIM}, "dd/MM/yyyy")]]></textFieldExpression>
 				<reportElement x="0" y="24" width="555" height="1" uuid="4e549e8d-85b2-4769-acb1-f03c04300642"/>
 			</line>
 			<textField>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1" y="1" width="109" height="23" uuid="630af522-bf9c-46f1-990c-17a3a45d1770"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1" y="1" width="359" height="23" uuid="630af522-bf9c-46f1-990c-17a3a45d1770"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{medicamento}.getNome()]]></textFieldExpression>
-			</textField>
-			<textField evaluationTime="Report">
-				<reportElement x="111" y="1" width="249" height="23" uuid="ca111102-8a6c-4410-879a-7990ca0889a0">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{paciente}.getNome()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="360" y="0" width="120" height="23" uuid="33385f9e-4c94-4666-a004-2c2a31ac7a9a">

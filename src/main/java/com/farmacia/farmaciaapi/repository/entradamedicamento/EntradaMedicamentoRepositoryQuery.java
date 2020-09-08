@@ -14,6 +14,8 @@ import com.farmacia.farmaciaapi.repository.projection.ResumoEntradaMedicamento;
 
 public interface EntradaMedicamentoRepositoryQuery {
 	
+	public List<EstatisticaEntradaMedicamentoPorMes> porMes(LocalDate inicio, LocalDate fim);
+	
 	public List<EstatisticaEntradaMedicamentoPorMes> porMedicamento(LocalDate mesReferencia);
 	public List<EstatisticaEntradaMedicamentoDia> porDia(LocalDate mesReferencia);
 
