@@ -25,7 +25,7 @@ public class UsuarioRepositoryImpl implements UsuarioRepositoryQuery {
 
 	@PersistenceContext
 	private EntityManager manager;
-
+	
 	@Override
 	public Page<Usuario> filtrar(UsuarioFilter usuarioFilter, Pageable pageable) {
 		// Consegue criar as criterias

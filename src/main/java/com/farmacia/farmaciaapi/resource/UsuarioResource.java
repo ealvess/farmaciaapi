@@ -1,6 +1,5 @@
 package com.farmacia.farmaciaapi.resource;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -12,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.farmacia.farmaciaapi.event.RecursoCriadoEvent;
 import com.farmacia.farmaciaapi.model.Permissao;
 import com.farmacia.farmaciaapi.model.Usuario;
+import com.farmacia.farmaciaapi.repository.PermissaoRepository;
 import com.farmacia.farmaciaapi.repository.UsuarioRepository;
 import com.farmacia.farmaciaapi.repository.filter.UsuarioFilter;
 import com.farmacia.farmaciaapi.repository.projection.ResumoUsuario;
@@ -37,12 +38,21 @@ public class UsuarioResource {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+	
+	@Autowired
+	private PermissaoRepository permissaoRepository;
 
 	@Autowired
 	private UsuarioService usuarioService;
 
 	@Autowired
 	private ApplicationEventPublisher publisher;
+	
+	@GetMapping("/permissao")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PACIENTE')")
+	public List<Permissao> listarTodas(){
+		return permissaoRepository.findAll();
+	}
 
 	@GetMapping
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_USUARIO')")
@@ -59,16 +69,14 @@ public class UsuarioResource {
 	@PostMapping
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_USUARIO')")
 	public ResponseEntity<Usuario> criar(@Validated @RequestBody Usuario usuario, HttpServletResponse response) {
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		String encodedPassword = passwordEncoder.encode(usuario.getSenha());
+		usuario.setSenha(encodedPassword);
 		Usuario usuarioSalvo = usuarioRepository.save(usuario);
-		if (usuarioSalvo.getTipo() == "farmaceutico") {
-			List<Permissao> permissoes = new ArrayList<Permissao>();
-			permissoes.add('1', null);
-			usuarioSalvo.setPermissoes(permissoes);
-		}
-
 		publisher.publishEvent(new RecursoCriadoEvent(this, response, usuarioSalvo.getCodigo()));
 		;
-
+		
+		
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioSalvo);
 	}
 
