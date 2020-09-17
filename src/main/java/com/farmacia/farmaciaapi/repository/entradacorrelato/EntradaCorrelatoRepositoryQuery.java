@@ -13,7 +13,8 @@ import com.farmacia.farmaciaapi.repository.projection.ResumoEntradaCorrelatos;
 
 public interface EntradaCorrelatoRepositoryQuery {
 	
-	public List<EstatisticaEntradaCorrelatoPorMes> porMes(LocalDate mesReferencia);
+	public List<EstatisticaEntradaCorrelatoPorMes> porCorrelato(LocalDate mesReferencia);
+	public List<EstatisticaEntradaCorrelatoPorMes> porMes(LocalDate inicio, LocalDate fim);
 
 	
 	public Page<EntradaCorrelato> filtrar(EntradaCorrelatoFilter entradaCorrelatoFilter, Pageable pageable);

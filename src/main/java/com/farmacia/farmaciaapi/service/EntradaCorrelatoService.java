@@ -1,6 +1,13 @@
 package com.farmacia.farmaciaapi.service;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
@@ -8,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.farmacia.farmaciaapi.dto.EstatisticaEntradaCorrelatoPorMes;
 import com.farmacia.farmaciaapi.model.Correlato;
 import com.farmacia.farmaciaapi.model.EntradaCorrelato;
 import com.farmacia.farmaciaapi.model.Fornecedor;
@@ -15,6 +23,11 @@ import com.farmacia.farmaciaapi.repository.CorrelatoRepository;
 import com.farmacia.farmaciaapi.repository.EntradaCorrelatoRepository;
 import com.farmacia.farmaciaapi.repository.FornecedorRepository;
 import com.farmacia.farmaciaapi.service.exception.ObjetoInexistenteOuInativoException;
+
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 @Service
 public class EntradaCorrelatoService {
@@ -29,7 +42,24 @@ public class EntradaCorrelatoService {
 	private FornecedorRepository fornecedorRepository;
 
 	private BigDecimal qtdNova;
-
+	
+	public byte[] relatorioPorMes(LocalDate inicio, LocalDate fim) throws Exception {
+		List<EstatisticaEntradaCorrelatoPorMes> dados = entradaCorrelatoRepository.porMes(inicio, fim);
+		
+		Map<String, Object> parametros = new HashMap<>();
+		parametros.put("DT_INICIO", Date.valueOf(inicio));
+		parametros.put("DT_FIM", Date.valueOf(fim));
+		parametros.put("REPORT_LOCALE", new Locale("pt", "BR"));
+		
+		InputStream inputStream = this.getClass().getResourceAsStream(
+				"/relatorios/entrada_correlatos_por_mes.jasper");
+		
+		JasperPrint jasperPrint = JasperFillManager.fillReport(inputStream, parametros,
+				new JRBeanCollectionDataSource(dados));
+		
+		return JasperExportManager.exportReportToPdf(jasperPrint);
+	}
+	
 	public EntradaCorrelato atualizar(Long codigo, EntradaCorrelato entradaCorrelato) {
 
 		EntradaCorrelato correlatoSalvo = buscarCorrelatoPeloCodigo(codigo);

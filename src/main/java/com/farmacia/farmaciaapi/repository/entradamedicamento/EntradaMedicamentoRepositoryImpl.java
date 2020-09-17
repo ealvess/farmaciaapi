@@ -29,35 +29,33 @@ public class EntradaMedicamentoRepositoryImpl implements EntradaMedicamentoRepos
 
 	@PersistenceContext
 	private EntityManager manager;
-	
+
 	@Override
 	public List<EstatisticaEntradaMedicamentoPorMes> porMes(LocalDate inicio, LocalDate fim) {
-CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
-		
-		CriteriaQuery<EstatisticaEntradaMedicamentoPorMes> criteriaQuery = criteriaBuilder.
-				createQuery(EstatisticaEntradaMedicamentoPorMes.class);
-		
-		Root<EntradaMedicamento> root = criteriaQuery.from(EntradaMedicamento.class);
-		
-		criteriaQuery.select(criteriaBuilder.construct(EstatisticaEntradaMedicamentoPorMes.class, 
-				root.get(EntradaMedicamento_.medicamento), 
-				root.get(EntradaMedicamento_.dataEntrada),
-				criteriaBuilder.sum(root.get(EntradaMedicamento_.quantidade))));
+		CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
 
+		CriteriaQuery<EstatisticaEntradaMedicamentoPorMes> criteriaQuery = criteriaBuilder
+				.createQuery(EstatisticaEntradaMedicamentoPorMes.class);
+
+		Root<EntradaMedicamento> root = criteriaQuery.from(EntradaMedicamento.class);
+
+		criteriaQuery.select(criteriaBuilder.construct(EstatisticaEntradaMedicamentoPorMes.class,
+				root.get(EntradaMedicamento_.medicamento),
+				criteriaBuilder.sum(root.get(EntradaMedicamento_.quantidade))));
 		
 		criteriaQuery.where(
 				criteriaBuilder.greaterThanOrEqualTo(root.get(EntradaMedicamento_.dataEntrada), 
 						inicio),
 				criteriaBuilder.lessThanOrEqualTo(root.get(EntradaMedicamento_.dataEntrada), 
 						fim));
+
 		
-		criteriaQuery.groupBy(root.get(EntradaMedicamento_.medicamento), 
-				root.get(EntradaMedicamento_.dataEntrada));
-		
-		TypedQuery<EstatisticaEntradaMedicamentoPorMes> typedQuery = manager
-				.createQuery(criteriaQuery);
-		
+		criteriaQuery.groupBy(root.get(EntradaMedicamento_.medicamento));
+
+		TypedQuery<EstatisticaEntradaMedicamentoPorMes> typedQuery = manager.createQuery(criteriaQuery);
+
 		return typedQuery.getResultList();
+
 	}
 
 	@Override

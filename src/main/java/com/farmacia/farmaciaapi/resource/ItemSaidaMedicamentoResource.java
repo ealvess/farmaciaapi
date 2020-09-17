@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -30,6 +32,7 @@ import com.farmacia.farmaciaapi.repository.ItemSaidaMedicamentoRepository;
 import com.farmacia.farmaciaapi.repository.filter.ItemSaidaMedicamentoFilter;
 import com.farmacia.farmaciaapi.repository.projection.ResumoSaidaDeMedicamentos;
 import com.farmacia.farmaciaapi.service.EntradaMedicamentoService;
+import com.farmacia.farmaciaapi.service.SaidaDeMedicamentoService;
 
 @RestController
 @RequestMapping("/saidamedicamentos")
@@ -41,29 +44,29 @@ public class ItemSaidaMedicamentoResource {
 	@Autowired
 	private EntradaMedicamentoService entradaMedicamentoService;
 	
+	@Autowired
+	private SaidaDeMedicamentoService saidaDeMedicamentoService;
 
 	@Autowired
 	private ApplicationEventPublisher publisher;
 
 	private BigDecimal valorTotal;
 	
+	@GetMapping("/relatorios/por-paciente")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ENTRADA_DE_MEDICAMENTO')")
+	public ResponseEntity<byte[]> relatorioPorMes() throws Exception {
+		byte[] relatorio = saidaDeMedicamentoService.relatorioPorMes();
+		
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
+				.body(relatorio);
+	}
+	
 	@GetMapping("/estatisticas/por-mes")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ITEM_SAIDA_MEDICAMENTO')")
 	public List<EstatisticaSaidaMedicamentoPorPaciente> porMes() {
 		return itemSaidaMedicamentoRepository.porMes(LocalDate.now());
 	}
-	
-	/*@GetMapping("/relatorios/por-paciente")
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ITEM_SAIDA_MEDICAMENTO')")
-	public ResponseEntity<byte[]> relatorioPorPpaciente(
-			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate inicio, 
-			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fim) throws Exception {
-		byte[] relatorio = saidaDeMedicamentoPorPacienteService.relatorioPorPessoa(inicio, fim);
-		
-		return ResponseEntity.ok()
-				.header(org.springframework.http.HttpHeaders.CONTENT_TYPE, org.springframework.http.MediaType.APPLICATION_PDF_VALUE)
-				.body(relatorio);
-	}*/
 
 	@GetMapping
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ITEM_SAIDA_MEDICAMENTO')")

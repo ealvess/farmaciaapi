@@ -61,13 +61,15 @@ public class EntradaMedicamentoResource {
 	@GetMapping("/relatorios/por-mes")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ENTRADA_DE_MEDICAMENTO')")
 	public ResponseEntity<byte[]> relatorioPorMes(
-		) throws Exception {
-		byte[] relatorio = entradaMedicamentoService.relatorioPorMes(LocalDate.now());
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate inicio, 
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fim) throws Exception {
+		byte[] relatorio = entradaMedicamentoService.relatorioPorMes(inicio, fim);
 		
 		return ResponseEntity.ok()
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
 				.body(relatorio);
 	}
+	
 	
 	@GetMapping("/estatisticas/por-medicamento")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ENTRADA_DE_MEDICAMENTO')")

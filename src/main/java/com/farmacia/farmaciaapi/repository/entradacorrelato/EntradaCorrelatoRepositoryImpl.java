@@ -30,7 +30,34 @@ public class EntradaCorrelatoRepositoryImpl implements EntradaCorrelatoRepositor
 	private EntityManager manager;
 
 	@Override
-	public List<EstatisticaEntradaCorrelatoPorMes> porMes(LocalDate mesReferencia) {
+	public List<EstatisticaEntradaCorrelatoPorMes> porMes(LocalDate inicio, LocalDate fim) {
+		CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
+
+		CriteriaQuery<EstatisticaEntradaCorrelatoPorMes> criteriaQuery = criteriaBuilder
+				.createQuery(EstatisticaEntradaCorrelatoPorMes.class);
+
+		Root<EntradaCorrelato> root = criteriaQuery.from(EntradaCorrelato.class);
+
+		criteriaQuery.select(criteriaBuilder.construct(EstatisticaEntradaCorrelatoPorMes.class,
+				root.get(EntradaCorrelato_.correlato),
+				criteriaBuilder.sum(root.get(EntradaCorrelato_.quantidade))));
+		
+		criteriaQuery.where(
+				criteriaBuilder.greaterThanOrEqualTo(root.get(EntradaCorrelato_.dataEntrada), 
+						inicio),
+				criteriaBuilder.lessThanOrEqualTo(root.get(EntradaCorrelato_.dataEntrada), 
+						fim));
+
+		
+		criteriaQuery.groupBy(root.get(EntradaCorrelato_.correlato));
+
+		TypedQuery<EstatisticaEntradaCorrelatoPorMes> typedQuery = manager.createQuery(criteriaQuery);
+
+		return typedQuery.getResultList();
+	}
+	
+	@Override
+	public List<EstatisticaEntradaCorrelatoPorMes> porCorrelato(LocalDate mesReferencia) {
 		CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
 
 		CriteriaQuery<EstatisticaEntradaCorrelatoPorMes> criteriaQuery = criteriaBuilder

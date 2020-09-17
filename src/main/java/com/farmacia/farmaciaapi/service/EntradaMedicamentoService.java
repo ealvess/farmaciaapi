@@ -2,8 +2,8 @@ package com.farmacia.farmaciaapi.service;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.time.LocalDate;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -43,21 +43,22 @@ public class EntradaMedicamentoService {
 
 	private BigDecimal qtdNova;
 	
-	public byte[] relatorioPorMes(LocalDate mesReferencia) throws Exception {
-		List<EstatisticaEntradaMedicamentoPorMes> dados = entradaMedicamentoRepository.porMedicamento(mesReferencia.now());
+	public byte[] relatorioPorMes(LocalDate inicio, LocalDate fim) throws Exception {
+		List<EstatisticaEntradaMedicamentoPorMes> dados = entradaMedicamentoRepository.porMes(inicio, fim);
 		
 		Map<String, Object> parametros = new HashMap<>();
+		parametros.put("DT_INICIO", Date.valueOf(inicio));
+		parametros.put("DT_FIM", Date.valueOf(fim));
 		parametros.put("REPORT_LOCALE", new Locale("pt", "BR"));
 		
 		InputStream inputStream = this.getClass().getResourceAsStream(
-				"/relatorios/quantidade_de_entrada_de_medicamento_por_mes.jasper");
+				"/relatorios/entrada_medicamentos_por_mes.jasper");
 		
 		JasperPrint jasperPrint = JasperFillManager.fillReport(inputStream, parametros,
 				new JRBeanCollectionDataSource(dados));
 		
 		return JasperExportManager.exportReportToPdf(jasperPrint);
 	}
-
 	
 	public EntradaMedicamento atualizar(Long codigo, EntradaMedicamento entradaMedicamento) {
 
