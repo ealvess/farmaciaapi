@@ -79,6 +79,19 @@ public class UsuarioResource {
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioSalvo);
 	}
+	
+	@PostMapping("/cadastrar")
+	public ResponseEntity<Usuario> cadastrar(@Validated @RequestBody Usuario usuario, HttpServletResponse response) {
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		String encodedPassword = passwordEncoder.encode(usuario.getSenha());
+		usuario.setSenha(encodedPassword);
+		Usuario usuarioSalvo = usuarioRepository.save(usuario);
+		publisher.publishEvent(new RecursoCriadoEvent(this, response, usuarioSalvo.getCodigo()));
+		;
+		
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioSalvo);
+	}
 
 	@GetMapping("/{codigo}")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_USUARIO')")
