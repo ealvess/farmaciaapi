@@ -20,7 +20,7 @@ public class Categoria {
 
 	@NotNull
 	private String nome;
-	
+
 	@NotNull
 	private Boolean ativo;
 
@@ -47,7 +47,7 @@ public class Categoria {
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
 	}
-	
+
 	@JsonIgnore
 	@Transient
 	public boolean isInativo() {
