@@ -21,7 +21,8 @@ CREATE TABLE usuario_permissao (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO usuario (codigo, nome, email, senha, tipo, ativo) values (1, 'Administrador', 'admin@gmail.com', '$2a$10$X607ZPhQ4EgGNaYKt3n4SONjIv9zc.VMWdEuhCuba7oLAL5IvcL5.', 'Farmacêutico', true);
-INSERT INTO usuario (codigo, nome, email, senha, tipo, ativo) values (2, 'Pedro Silva', 'pedro@gmail.com', '$2y$12$koo2eLpxgttzQP.X.IzMNOq8rPxr2LyBEkMx/UPZfZdBMpebvlAKe', 'Atendente', true);
+INSERT INTO usuario (codigo, nome, email, senha, tipo, ativo) values (2, 'Auto-Cadastro', 'useradd@gmail.com', '$2a$10$h8iyAn2d2649.cM6n2zd2.HcfcWo0cnr1eJuNAyRx9Yv6PjdbbaRW', 'Farmacêutico', true);
+INSERT INTO usuario (codigo, nome, email, senha, tipo, ativo) values (3, 'Pedro Silva', 'pedro@gmail.com', '$2y$12$koo2eLpxgttzQP.X.IzMNOq8rPxr2LyBEkMx/UPZfZdBMpebvlAKe', 'Atendente', true);
 
 INSERT INTO permissao (codigo, descricao) values (1, 'ROLE_CADASTRAR_CATEGORIA_DE_MEDICAMENTO');
 INSERT INTO permissao (codigo, descricao) values (2, 'ROLE_REMOVER_CATEGORIA_DE_MEDICAMENTO');
@@ -112,18 +113,21 @@ INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 35);
 INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 36);
 INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 37);
 
--- maria
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 3);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 6);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 9);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 12);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 15);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 16);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 17);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 18);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 19);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 22);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 25);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 28);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 31);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 34);
+-- pedro
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (3, 3);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (3, 6);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (3, 9);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (3, 12);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (3, 15);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (3, 16);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (3, 17);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (3, 18);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (3, 19);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (3, 22);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (3, 25);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (3, 28);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (3, 31);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (3, 34);
+
+-- auto-cadastro
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 35);

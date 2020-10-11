@@ -21,10 +21,15 @@ public class ItemSaidaMedicamento {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
-
+	
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "codigo_paciente")
 	private Paciente paciente;
+
+	@ManyToOne
+	@JoinColumn(name = "codigo_medico")
+	private Medico medico;
 
 	@NotNull
 	@ManyToOne
@@ -55,6 +60,14 @@ public class ItemSaidaMedicamento {
 
 	public void setPaciente(Paciente paciente) {
 		this.paciente = paciente;
+	}
+
+	public Medico getMedico() {
+		return medico;
+	}
+
+	public void setMedico(Medico medico) {
+		this.medico = medico;
 	}
 
 	public EntradaMedicamento getEntradaMedicamento() {

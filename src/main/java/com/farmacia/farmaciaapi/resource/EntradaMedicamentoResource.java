@@ -96,7 +96,7 @@ public class EntradaMedicamentoResource {
 	}
 	
 	@GetMapping("/listar")
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR__ENTRADA_DE_MEDICAMENTO')")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_ENTRADA_DE_MEDICAMENTO')")
 	public List<EntradaMedicamento> listarTodas(){
 		return entradaMedicamentoRepository.findAll();
 	}
